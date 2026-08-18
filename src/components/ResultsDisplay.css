@@ -12,7 +12,7 @@
   background-color: var(--glass-surface-bg);
   backdrop-filter: var(--glass-surface-blur);
   -webkit-backdrop-filter: var(--glass-surface-blur);
-  border: 1px solid var(--glass-border);
+  border: none;
   box-shadow: var(--glass-shadow), var(--glass-specular-inset);
   border-radius: var(--r-lg);
   animation: fade-in var(--ease-base) both;
