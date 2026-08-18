@@ -1,45 +1,36 @@
 # TypeSpeed
 
-A minimal, focused typing speed test built with React, TypeScript, and Vite.
-
-## Stack
-
-- React 19 + TypeScript
-- Vite 8
-- Plain CSS (no UI framework, no Tailwind)
+A refined, high-performance typing speed test application built with a modern Apple Liquid Glass material design.
 
 ## Features
 
-- **Random Passage Selection**: Curated typing passages.
-- **Real-Time Character Feedback**: State-based character highlighting (`correct`, `incorrect`, `current`, `untyped`).
-- **Timestamp-Based Timer**: Accurate 15s, 30s, and 60s mode options.
-- **Live Metrics**: Real-time WPM, Accuracy (%), Correct/Incorrect character counts, and countdown timer.
-- **Polished Results Experience**: Dedicated finish view with Net WPM hero, Raw WPM, Accuracy, Correct/Incorrect breakdown, and test time.
-- **Keyboard Shortcut**: Press `Enter` (or click `Restart Test`) to immediately generate a new test and focus input.
-- **Backspace & Error Handling**: Recalculates state cleanly without artificial error inflation.
-- **Test Lifecycle**: `idle` → `running` → `finished`.
-- **Clean Architecture**: Custom hooks (`useTyping`), pure utilities (`calculateMetrics`, `buildDisplay`), and explicit TypeScript types.
+- **Typing Engine**: Real-time character-level feedback, error tracking, and backspace handling.
+- **Timer Modes**: 15s, 30s, and 60s test durations using accurate timestamp-based measurement.
+- **Live & Post-Test Metrics**: Real-time Net WPM, Raw WPM, Accuracy (%), and character counts.
+- **Light & Dark Theme**: Multi-tier Liquid Glass material system with a persistent theme toggle (`localStorage` persistence with `prefers-color-scheme` fallback).
+- **Personal Statistics & History**: Persistent local test history (`localStorage`), personal best tracking, and aggregate performance analytics.
+- **Widened Ergonomic Layout**: 1600px desktop canvas with protected passage measure (`68ch`) for optimal typing focus.
 
-## Project Structure
+## Tech Stack
 
-```
-src/
-├── components/    # TypingArea, ResultsDisplay, Header
-├── hooks/         # useTyping
-├── types/         # CharState, TestState, TestDuration, TypingMetrics
-├── utils/         # buildDisplay, calculateMetrics
-└── data/          # passages + getRandomPassage
-```
+- **Framework & Language**: React 19 + TypeScript
+- **Build Tool**: Vite 8
+- **Styling**: Vanilla CSS (CSS Modules & Custom Properties)
 
-## Getting Started
+## Local Development
 
-```bash
-npm install
-npm run dev
-```
+1. **Install dependencies**:
+   ```bash
+   npm install
+   ```
 
-## Build
+2. **Start the local development server**:
+   ```bash
+   npm run dev
+   ```
+   Open `http://localhost:5173/` in your browser.
 
-```bash
-npm run build
-```
+3. **Build for production**:
+   ```bash
+   npm run build
+   ```
