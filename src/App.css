@@ -11,7 +11,6 @@
 /* ============================================================
    Shared container
    Centres content and constrains line length.
-   Used by main, footer — keeps alignment consistent throughout.
    ============================================================ */
 .container {
   width: 100%;
@@ -65,6 +64,20 @@
 }
 
 /* ============================================================
+   Short Viewports (e.g. 1366x768, 1280x720, 375x667)
+   Tightens vertical padding so content fits naturally.
+   ============================================================ */
+@media (max-height: 720px) {
+  .main {
+    padding: var(--s-5) 0 var(--s-8);
+  }
+
+  .intro {
+    margin-bottom: var(--s-5);
+  }
+}
+
+/* ============================================================
    Responsive — Tablet (≤768px)
    ============================================================ */
 @media (max-width: 768px) {
@@ -73,11 +86,11 @@
   }
 
   .main {
-    padding: var(--s-8) 0 var(--s-10);
+    padding: var(--s-6) 0 var(--s-8);
   }
 
   .intro {
-    margin-bottom: var(--s-6);
+    margin-bottom: var(--s-5);
   }
 
   .intro__heading {
@@ -91,7 +104,6 @@
 
 /* ============================================================
    Responsive — Mobile (≤480px)
-   Don't just shrink: simplify.
    ============================================================ */
 @media (max-width: 480px) {
   .container {
@@ -99,11 +111,11 @@
   }
 
   .main {
-    padding: var(--s-8) 0 var(--s-10);
+    padding: var(--s-4) 0 var(--s-6);
   }
 
   .intro {
-    margin-bottom: var(--s-6);
+    margin-bottom: var(--s-4);
   }
 
   .intro__desc {

@@ -14,11 +14,7 @@
    All hard-coded values live here. Components reference tokens only.
    ============================================================ */
 :root {
-  /* --- Colors ---
-     One background, one surface, one border.
-     Three text levels for hierarchy.
-     One accent. Full stop.
-  */
+  /* --- Colors --- */
   --c-bg:      #111213;   /* page background          */
   --c-surface: #191a1b;   /* slightly elevated surface */
   --c-border:  #232425;   /* dividers, subtle rules    */
@@ -39,7 +35,7 @@
   --f-ui:   'Inter', system-ui, -apple-system, sans-serif;
   --f-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
 
-  /* Type scale (minor-third ratio, base 15px) */
+  /* Type scale */
   --t-xs:   0.6875rem;  /* 11px */
   --t-sm:   0.8125rem;  /* 13px */
   --t-base: 0.9375rem;  /* 15px */
@@ -62,11 +58,9 @@
   --s-20: 5rem;      /* 80px */
 
   /* --- Layout --- */
-  --content-w: 960px;  /* app shell width — typing text stays at 65ch inside */
+  --content-w: 960px;  /* app shell width */
 
-  /* --- Radii ---
-     Kept small. Rounded corners draw attention; use them sparingly.
-  */
+  /* --- Radii --- */
   --r-sm: 3px;
   --r-md: 6px;
 
@@ -81,6 +75,7 @@
 html {
   font-size: 16px;
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -90,6 +85,7 @@ body {
   color: var(--c-text-1);
   line-height: 1.6;
   min-height: 100dvh;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -112,7 +108,7 @@ body {
 /* ============================================================
    Scrollbar
    ============================================================ */
-::-webkit-scrollbar        { width: 5px; }
+::-webkit-scrollbar        { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track  { background: transparent; }
 ::-webkit-scrollbar-thumb  { background: var(--c-border); border-radius: 99px; }
 

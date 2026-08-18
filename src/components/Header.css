@@ -9,10 +9,6 @@
 }
 
 .header__wordmark {
-  /*
-    Lowercase, tight tracking — feels like a product name, not a billboard.
-    Accent color makes it distinct without needing a logo mark.
-  */
   font-family: var(--f-ui);
   font-size: var(--t-md);
   font-weight: 600;
@@ -24,4 +20,26 @@
 
 .header__wordmark:hover {
   opacity: 0.75;
+}
+
+@media (max-height: 720px) {
+  .header {
+    padding: var(--s-4) 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .header__inner {
+    padding: 0 var(--s-5);
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: var(--s-4) 0;
+  }
+
+  .header__inner {
+    padding: 0 var(--s-4);
+  }
 }

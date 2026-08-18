@@ -4,12 +4,12 @@
 
 .stats-history {
   width: 100%;
-  margin-top: var(--s-12);
-  padding-top: var(--s-8);
+  margin-top: var(--s-10);
+  padding-top: var(--s-6);
   border-top: 1px solid var(--c-border);
   display: flex;
   flex-direction: column;
-  gap: var(--s-6);
+  gap: var(--s-5);
 }
 
 .stats-history__header {
@@ -34,6 +34,8 @@
   background: none;
   border: none;
   cursor: pointer;
+  padding: var(--s-1) var(--s-2);
+  min-height: 32px;
   letter-spacing: 0.02em;
   transition: color var(--ease-fast);
 }
@@ -46,7 +48,7 @@
 .stats-history__summary-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-  gap: var(--s-4);
+  gap: var(--s-3);
 }
 
 .stats-card {
@@ -56,7 +58,7 @@
   background-color: var(--c-surface);
   border: 1px solid var(--c-border);
   border-radius: var(--r-md);
-  padding: var(--s-4);
+  padding: var(--s-3) var(--s-4);
 }
 
 .stats-card__label {
@@ -116,6 +118,7 @@
   font-size: var(--t-sm);
   font-weight: 500;
   color: var(--c-text-1);
+  white-space: nowrap;
 }
 
 /* --- Recent History Table --- */
@@ -138,16 +141,18 @@
   font-family: var(--f-ui);
   font-size: var(--t-sm);
   color: var(--c-text-3);
-  padding: var(--s-3) 0;
+  padding: var(--s-2) 0;
 }
 
 .stats-history__table-wrapper {
   width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .stats-history__table {
   width: 100%;
+  min-width: 320px;
   border-collapse: collapse;
   font-family: var(--f-mono);
   font-size: var(--t-sm);
@@ -166,9 +171,10 @@
 }
 
 .stats-history__table td {
-  padding: var(--s-3);
+  padding: var(--s-2) var(--s-3);
   color: var(--c-text-2);
   border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  white-space: nowrap;
 }
 
 .stats-history__wpm-cell {
@@ -176,11 +182,27 @@
   font-weight: 600;
 }
 
+/* --- Short Screen Adjustments --- */
+@media (max-height: 720px) {
+  .stats-history {
+    margin-top: var(--s-6);
+    padding-top: var(--s-4);
+    gap: var(--s-4);
+  }
+}
+
 /* --- Responsive Adjustments --- */
 @media (max-width: 600px) {
   .stats-history__modes-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, 1fr);
     gap: var(--s-2);
+  }
+
+  .stats-mode {
+    padding: var(--s-2) var(--s-3);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
   }
 
   .stats-history__summary-grid {
