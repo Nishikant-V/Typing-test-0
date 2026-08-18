@@ -5,9 +5,9 @@ const Header: React.FC = () => {
   return (
     <header className="header" role="banner">
       <div className="header__inner">
-        {/* Wordmark — the only element in the header intentionally */}
-        <a href="/" className="header__wordmark" aria-label="TypeSpeed — home">
-          typespeed
+        <a href="/" className="header__brand" aria-label="TypeSpeed — home">
+          <span className="header__wordmark">TypeSpeed</span>
+          <span className="header__tag">v1.0</span>
         </a>
       </div>
     </header>

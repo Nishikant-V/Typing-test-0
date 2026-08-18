@@ -52,7 +52,7 @@
   line-height: 1;
   color: var(--c-accent);
   letter-spacing: -0.03em;
-  text-shadow: 0 0 24px rgba(226, 183, 20, 0.25);
+  text-shadow: 0 0 24px rgba(200, 176, 130, 0.25);
 }
 
 .results__wpm-label {
@@ -71,7 +71,7 @@
   font-weight: 600;
   color: var(--c-accent);
   background: var(--c-accent-sub);
-  border: 1px solid rgba(226, 183, 20, 0.3);
+  border: 1px solid rgba(200, 176, 130, 0.3);
   border-radius: var(--r-sm);
   padding: 3px 8px;
   letter-spacing: 0.04em;
@@ -141,7 +141,7 @@
   padding: var(--s-2) var(--s-4);
   min-height: 40px;
   cursor: pointer;
-  box-shadow: 0 4px 16px rgba(226, 183, 20, 0.25);
+  box-shadow: 0 4px 16px rgba(200, 176, 130, 0.25);
   transition: opacity var(--ease-fast), transform var(--ease-fast);
 }
 

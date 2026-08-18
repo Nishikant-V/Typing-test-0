@@ -12,12 +12,10 @@ function formatDate(timestamp: number): string {
   const date = new Date(timestamp);
   const now = new Date();
 
-  // If today, show time (e.g. 14:32)
   if (date.toDateString() === now.toDateString()) {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }
 
-  // Otherwise show Month Day (e.g. Aug 19)
   return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
 }
 
@@ -50,25 +48,38 @@ export const StatsHistory: React.FC<StatsHistoryProps> = ({
         )}
       </div>
 
-      {/* Aggregate Stats Summary */}
-      <div className="stats-history__summary-grid">
-        <div className="stats-card">
-          <span className="stats-card__label">Tests Completed</span>
-          <span className="stats-card__value">{stats.testsCompleted}</span>
+      {/* Aggregate Stats Summary — 1-Hero + 3-Compact Asymmetric Layout */}
+      <div className="stats-history__summary">
+        {/* Personal Best Featured Hero Tile */}
+        <div className="stats-card stats-card--hero">
+          <div className="stats-card__header">
+            <span className="stats-card__label">Personal Best</span>
+            {stats.personalBestWpm > 0 && (
+              <span className="stats-card__badge">Peak Metric</span>
+            )}
+          </div>
+          <div className="stats-card__hero-body">
+            <span className="stats-card__value stats-card__value--hero">
+              {stats.personalBestWpm}
+            </span>
+            <span className="stats-card__unit stats-card__unit--hero">WPM</span>
+          </div>
         </div>
-        <div className="stats-card">
-          <span className="stats-card__label">Personal Best</span>
-          <span className="stats-card__value stats-card__value--accent">
-            {stats.personalBestWpm} <span className="stats-card__unit">WPM</span>
-          </span>
-        </div>
-        <div className="stats-card">
-          <span className="stats-card__label">Average WPM</span>
-          <span className="stats-card__value">{stats.averageWpm}</span>
-        </div>
-        <div className="stats-card">
-          <span className="stats-card__label">Average Accuracy</span>
-          <span className="stats-card__value">{stats.averageAccuracy}%</span>
+
+        {/* Secondary Compact Stat Cards */}
+        <div className="stats-card__secondary-grid">
+          <div className="stats-card">
+            <span className="stats-card__label">Tests Completed</span>
+            <span className="stats-card__value">{stats.testsCompleted}</span>
+          </div>
+          <div className="stats-card">
+            <span className="stats-card__label">Average WPM</span>
+            <span className="stats-card__value">{stats.averageWpm}</span>
+          </div>
+          <div className="stats-card">
+            <span className="stats-card__label">Average Accuracy</span>
+            <span className="stats-card__value">{stats.averageAccuracy}%</span>
+          </div>
         </div>
       </div>
 

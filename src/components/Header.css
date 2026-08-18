@@ -1,5 +1,5 @@
 .header {
-  padding: var(--s-6) 0;
+  padding: var(--s-5) 0;
   position: sticky;
   top: 0;
   z-index: 50;
@@ -17,6 +17,16 @@
   max-width: var(--content-w);
   margin: 0 auto;
   padding: 0 var(--s-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  text-decoration: none;
 }
 
 .header__wordmark {
@@ -24,13 +34,25 @@
   font-size: var(--t-md);
   font-weight: 600;
   letter-spacing: -0.02em;
-  color: var(--c-accent);
-  text-decoration: none;
+  color: var(--c-text-1);
   transition: opacity var(--ease-fast);
 }
 
+.header__tag {
+  font-family: var(--f-ui);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  color: var(--c-accent);
+  background-color: var(--c-accent-sub);
+  border: 1px solid rgba(200, 176, 130, 0.25);
+  border-radius: 99px;
+  padding: 2px 8px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 .header__wordmark:hover {
-  opacity: 0.75;
+  opacity: 0.85;
 }
 
 @media (max-height: 720px) {

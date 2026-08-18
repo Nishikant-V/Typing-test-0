@@ -10,7 +10,7 @@
 }
 
 /* ============================================================
-   Design Tokens — Refined Liquid Glass Material System
+   Design Tokens — Liquid Glass System (Desaturated Dusty Ochre Accent)
    ============================================================ */
 :root {
   /* --- Colors --- */
@@ -19,13 +19,14 @@
   --c-border:  #24262b;   /* dividers, subtle rules    */
 
   --c-text-1: #ffffff;   /* primary — 100% WCAG AA white contrast */
-  --c-text-2: #a1a8b0;   /* secondary — labels & metadata       */
+  --c-text-2: #9aa0a6;   /* secondary — labels & metadata       */
   --c-text-3: #6b7280;   /* muted — placeholders & hints        */
 
-  --c-accent:     #e2b714;            /* amber — the single accent */
-  --c-accent-sub: rgba(226, 183, 20, 0.12); /* faint accent fill  */
+  /* Desaturated Dusty Ochre / Champagne Accent (Apple Sequoia style) */
+  --c-accent:     #c8b082;
+  --c-accent-sub: rgba(200, 176, 130, 0.14); /* faint accent fill */
 
-  /* --- Liquid Glass Tiers (Translucent Material Specs) --- */
+  /* --- Liquid Glass Tiers --- */
   /* Tier 1: Chrome (Header) */
   --glass-chrome-bg:         rgba(18, 19, 22, 0.22);
   --glass-chrome-blur:       blur(32px) saturate(170%);
@@ -37,14 +38,14 @@
   --glass-surface-shadow:    0 12px 32px rgba(0, 0, 0, 0.35);
 
   /* Tier 3: Summary Cards & Elevated Surfaces */
-  --glass-card-bg:           rgba(22, 24, 28, 0.12);
+  --glass-card-bg:           rgba(22, 24, 28, 0.14);
   --glass-card-shadow:       0 6px 20px rgba(0, 0, 0, 0.25);
 
   /* Internal Refraction Gradient */
   --glass-refraction-bg:     linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.01) 100%);
 
   /* Directional Specular Lighting (Top-Left Light Source, 0.40 Alpha at Top-Left) */
-  --glass-directional-edge:  linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 35%, rgba(255, 255, 255, 0) 75%);
+  --glass-directional-edge:  linear-gradient(135deg, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0.08) 35%, rgba(255, 255, 255, 0) 75%);
 
   /* Functional colors — typing feedback only */
   --c-correct:   #4ade80;
@@ -52,7 +53,9 @@
   --c-pending:   var(--c-text-3);
 
   /* --- Typography --- */
-  --f-ui:   'Inter', system-ui, -apple-system, sans-serif;
+  /* UI Chrome & Headings: System Sans-Serif font stack */
+  --f-ui:   -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", system-ui, sans-serif;
+  /* Functional Monospace: ONLY for passage characters & numeric stat values */
   --f-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
 
   /* Type scale */
@@ -92,7 +95,6 @@
 
 /* ============================================================
    Base & Atmospheric Background
-   Full-page ambient luminance field spanning the full scroll height
    ============================================================ */
 html {
   font-size: 16px;
@@ -105,7 +107,7 @@ body {
   font-size: var(--t-base);
   background-color: var(--c-bg);
   background-image:
-    radial-gradient(ellipse 120% 70% at 50% -20%, rgba(226, 183, 20, 0.15), transparent 75%),
+    radial-gradient(ellipse 120% 70% at 50% -20%, rgba(200, 176, 130, 0.12), transparent 75%),
     radial-gradient(ellipse 70% 50% at 15% 35%, rgba(75, 90, 135, 0.33), transparent 70%),
     radial-gradient(ellipse 75% 55% at 85% 65%, rgba(65, 75, 110, 0.30), transparent 70%),
     radial-gradient(ellipse 80% 60% at 20% 90%, rgba(55, 65, 95, 0.27), transparent 70%);

@@ -44,10 +44,78 @@
   color: var(--c-incorrect);
 }
 
-/* --- Summary Grid — Card Tier Glass Cards (0.16 Opacity, 0 6px 20px shadow) --- */
-.stats-history__summary-grid {
+/* --- Asymmetric Summary Layout (1 Featured Hero Tile + 3 Compact Tiles) --- */
+.stats-history__summary {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  grid-template-columns: 1.3fr 2fr;
+  gap: var(--s-4);
+  align-items: stretch;
+}
+
+/* --- Featured Hero Personal Best Tile --- */
+.stats-card--hero {
+  background:
+    var(--glass-refraction-bg) padding-box,
+    rgba(200, 176, 130, 0.07) padding-box,
+    var(--glass-directional-edge) border-box;
+  backdrop-filter: var(--glass-surface-blur);
+  -webkit-backdrop-filter: var(--glass-surface-blur);
+  border: 1px solid transparent;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  border-radius: var(--r-md);
+  padding: var(--s-4) var(--s-5);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+
+.stats-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stats-card__badge {
+  font-family: var(--f-ui);
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--c-accent);
+  background: var(--c-accent-sub);
+  border: 1px solid rgba(200, 176, 130, 0.25);
+  border-radius: 99px;
+  padding: 2px 7px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.stats-card__hero-body {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-2);
+}
+
+.stats-card__value--hero {
+  font-family: var(--f-mono);
+  font-size: 2.75rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--c-accent);
+  letter-spacing: -0.02em;
+}
+
+.stats-card__unit--hero {
+  font-family: var(--f-ui);
+  font-size: var(--t-md);
+  font-weight: 600;
+  color: var(--c-accent);
+  opacity: 0.85;
+}
+
+/* --- Secondary 3-Card Grid --- */
+.stats-card__secondary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--s-3);
 }
 
@@ -85,10 +153,6 @@
   font-size: var(--t-xl);
   font-weight: 600;
   color: var(--c-text-1);
-}
-
-.stats-card__value--accent {
-  color: var(--c-accent);
 }
 
 .stats-card__unit {
@@ -133,7 +197,7 @@
   white-space: nowrap;
 }
 
-/* --- Recent History Table — Tier 2 Functional Glass Surface --- */
+/* --- Recent History Table --- */
 .stats-history__recent {
   display: flex;
   flex-direction: column;
@@ -175,7 +239,6 @@
   width: 100%;
   min-width: 320px;
   border-collapse: collapse;
-  font-family: var(--f-mono);
   font-size: var(--t-sm);
   text-align: left;
 }
@@ -194,12 +257,14 @@
 
 .stats-history__table td {
   padding: var(--s-3);
+  font-family: var(--f-ui);
   color: var(--c-text-2);
   border-bottom: 1px solid rgba(255, 255, 255, 0.03);
   white-space: nowrap;
 }
 
 .stats-history__wpm-cell {
+  font-family: var(--f-mono) !important;
   color: var(--c-text-1);
   font-weight: 600;
 }
@@ -214,7 +279,21 @@
 }
 
 /* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+  .stats-history__summary {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-card__secondary-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
 @media (max-width: 600px) {
+  .stats-card__secondary-grid {
+    grid-template-columns: 1fr;
+  }
+
   .stats-history__modes-grid {
     grid-template-columns: repeat(3, 1fr);
     gap: var(--s-2);
@@ -225,9 +304,5 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 2px;
-  }
-
-  .stats-history__summary-grid {
-    grid-template-columns: repeat(2, 1fr);
   }
 }

@@ -1,5 +1,5 @@
 /* ============================================================
-   Typing Area — Tier 2 Functional Surface Glass Container
+   Typing Area — Tier 2 Functional Glass Container
    ============================================================ */
 
 .typing-area {
@@ -62,14 +62,14 @@
   gap: var(--s-3);
 }
 
-/* Duration selector modes — Solid elevated control (No nested glass) */
+/* Segmented Control Pill Container (Apple Sequoia Style) */
 .typing-area__modes {
-  display: flex;
+  display: inline-flex;
   gap: 2px;
-  background-color: var(--c-surface);
-  border: 1px solid var(--c-border);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  border-radius: var(--r-md);
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+  border-radius: 99px;
   padding: 3px;
 }
 
@@ -79,26 +79,26 @@
   color: var(--c-text-2);
   background: transparent;
   border: 1px solid transparent;
-  border-radius: var(--r-sm);
+  border-radius: 99px;
   padding: var(--s-1) var(--s-3);
-  min-height: 32px;
+  min-height: 30px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: color var(--ease-fast), background-color var(--ease-fast), border-color var(--ease-fast);
+  transition: color var(--ease-fast), background-color var(--ease-fast), box-shadow var(--ease-fast);
 }
 
 .typing-area__mode-btn:hover:not(:disabled) {
   color: var(--c-text-1);
-  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .typing-area__mode-btn--active {
   color: var(--c-accent);
   font-weight: 600;
-  background-color: var(--c-accent-sub);
-  border-color: rgba(226, 183, 20, 0.25);
+  background-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  border-color: rgba(200, 176, 130, 0.25);
 }
 
 .typing-area__mode-btn:disabled {
@@ -128,7 +128,7 @@
 .typing-area__restart-icon-btn:hover {
   color: var(--c-accent);
   background-color: #202227;
-  border-color: rgba(226, 183, 20, 0.3);
+  border-color: rgba(200, 176, 130, 0.3);
   transform: rotate(60deg);
 }
 
@@ -181,7 +181,7 @@
 }
 
 /* ============================================================
-   Passage container — Highest legibility priority
+   Passage container — Functional Monospace
    ============================================================ */
 .typing-area__passage {
   line-height: 1.85;
@@ -304,14 +304,14 @@
   }
 
   .typing-area__mode-btn {
-    min-height: 38px;
-    min-width: 42px;
-    padding: var(--s-2) var(--s-3);
+    min-height: 36px;
+    min-width: 40px;
+    padding: var(--s-1) var(--s-3);
   }
 
   .typing-area__restart-icon-btn {
-    min-height: 38px;
-    min-width: 38px;
+    min-height: 36px;
+    min-width: 36px;
   }
 
   .typing-area__metrics {
