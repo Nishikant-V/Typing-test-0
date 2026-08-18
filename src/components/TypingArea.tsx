@@ -1,6 +1,6 @@
 import React, { useRef, useState, useCallback, memo } from 'react';
 import { useTyping } from '../hooks/useTyping';
-import type { CharDisplay } from '../types';
+import type { CharDisplay, TestDuration } from '../types';
 import './TypingArea.css';
 
 // ---------------------------------------------------------------------------
@@ -34,8 +34,19 @@ Char.displayName = 'Char';
 // TypingArea
 // ---------------------------------------------------------------------------
 
+const DURATIONS: readonly TestDuration[] = [15, 30, 60];
+
 const TypingArea: React.FC = () => {
-  const { display, testState, handleKeyDown, reset } = useTyping();
+  const {
+    display,
+    testState,
+    duration,
+    metrics,
+    handleKeyDown,
+    setDuration,
+    reset,
+  } = useTyping();
+
   const inputRef = useRef<HTMLInputElement>(null);
   const [isFocused, setIsFocused] = useState(false);
 
@@ -52,12 +63,11 @@ const TypingArea: React.FC = () => {
       if (testState === 'finished' && e.key === 'Enter') {
         e.preventDefault();
         reset();
-        // Input stays focused — no DOM change affects the input element itself
         return;
       }
       handleKeyDown(e);
     },
-    [testState, handleKeyDown, reset],
+    [testState, handleKeyDown, reset]
   );
 
   const sectionClass = [
@@ -72,12 +82,7 @@ const TypingArea: React.FC = () => {
       onClick={focusInput}
       aria-label="Typing test"
     >
-      {/*
-        Hidden input — the sole keyboard focus target.
-        Always present in the DOM so focus is not lost during state transitions.
-        value="" + onChange no-op: controlled input that stays empty.
-        e.preventDefault() in onKeyDown prevents characters from being inserted.
-      */}
+      {/* Hidden input — sole focus target */}
       <input
         ref={inputRef}
         className="typing-area__input"
@@ -93,14 +98,91 @@ const TypingArea: React.FC = () => {
         spellCheck={false}
       />
 
-      {testState === 'finished' ? (
-        /* ---- Finished state ---- */
-        <div className="typing-area__finished" role="status">
-          <p className="typing-area__finished-msg">Passage complete.</p>
+      {/* Toolbar — Controls & Live Metrics */}
+      <div className="typing-area__toolbar" onClick={(e) => e.stopPropagation()}>
+        <div className="typing-area__controls">
+          <div className="typing-area__modes" role="group" aria-label="Test duration selector">
+            {DURATIONS.map((d) => (
+              <button
+                key={d}
+                type="button"
+                className={`typing-area__mode-btn ${
+                  duration === d ? 'typing-area__mode-btn--active' : ''
+                }`}
+                onClick={() => {
+                  setDuration(d);
+                  focusInput();
+                }}
+                disabled={testState === 'running'}
+                aria-label={`${d} seconds mode`}
+              >
+                {d}s
+              </button>
+            ))}
+          </div>
+
           <button
+            type="button"
+            className="typing-area__restart-icon-btn"
+            onClick={() => {
+              reset();
+              focusInput();
+            }}
+            aria-label="Restart test"
+            title="Restart test"
+          >
+            <span aria-hidden="true">↻</span>
+          </button>
+        </div>
+
+        {/* Live Metrics */}
+        <div className="typing-area__metrics" aria-label="Live test metrics">
+          <div className="typing-area__metric">
+            <span className="typing-area__metric-label">TIME</span>
+            <span className="typing-area__metric-val typing-area__metric-val--accent">
+              {metrics.timeRemaining}s
+            </span>
+          </div>
+          <div className="typing-area__metric">
+            <span className="typing-area__metric-label">WPM</span>
+            <span className="typing-area__metric-val">{metrics.wpm}</span>
+          </div>
+          <div className="typing-area__metric">
+            <span className="typing-area__metric-label">ACC</span>
+            <span className="typing-area__metric-val">{metrics.accuracy}%</span>
+          </div>
+          <div className="typing-area__metric">
+            <span className="typing-area__metric-label">CHARS</span>
+            <span className="typing-area__metric-val">
+              <span className="typing-area__correct-count">{metrics.correctChars}</span>
+              <span className="typing-area__slash">/</span>
+              <span className="typing-area__incorrect-count">{metrics.incorrectChars}</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Passage Display */}
+      <div className="typing-area__passage" aria-hidden="true">
+        {display.map((charDisplay, i) => (
+          <Char key={i} display={charDisplay} />
+        ))}
+      </div>
+
+      {/* Finished State Summary */}
+      {testState === 'finished' && (
+        <div className="typing-area__finished" role="status">
+          <div className="typing-area__finished-info">
+            <p className="typing-area__finished-title">Test Complete</p>
+            <p className="typing-area__finished-stats">
+              {metrics.wpm} WPM &bull; {metrics.accuracy}% Accuracy &bull; {metrics.correctChars} correct / {metrics.incorrectChars} errors
+            </p>
+          </div>
+          <button
+            type="button"
             className="typing-area__restart"
             onClick={(e) => {
-              e.stopPropagation(); // prevent section onClick from firing
+              e.stopPropagation();
               reset();
               focusInput();
             }}
@@ -110,13 +192,6 @@ const TypingArea: React.FC = () => {
           <p className="typing-area__hint" aria-hidden="true">
             or press Enter
           </p>
-        </div>
-      ) : (
-        /* ---- Active typing display ---- */
-        <div className="typing-area__passage" aria-hidden="true">
-          {display.map((charDisplay, i) => (
-            <Char key={i} display={charDisplay} />
-          ))}
         </div>
       )}
 

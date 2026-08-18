@@ -1,7 +1,7 @@
-import { useReducer, useCallback } from 'react';
+import { useReducer, useCallback, useEffect, useState } from 'react';
 import type { KeyboardEvent } from 'react';
-import type { CharDisplay, TestState } from '../types';
-import { buildDisplay } from '../utils/typing';
+import type { CharDisplay, TestDuration, TestState, TypingMetrics } from '../types';
+import { buildDisplay, calculateMetrics } from '../utils/typing';
 import { getRandomPassage } from '../data/passages';
 
 // ---------------------------------------------------------------------------
@@ -12,6 +12,9 @@ interface State {
   passage: string;
   typed: string;
   testState: TestState;
+  duration: TestDuration;
+  startTimeMs: number | null;
+  endTimeMs: number | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -19,49 +22,94 @@ interface State {
 // ---------------------------------------------------------------------------
 
 type Action =
-  | { type: 'TYPE'; char: string }
+  | { type: 'TYPE'; char: string; nowMs: number }
   | { type: 'BACKSPACE' }
-  | { type: 'RESET' };
+  | { type: 'TICK'; nowMs: number }
+  | { type: 'SET_DURATION'; duration: TestDuration }
+  | { type: 'RESET'; duration?: TestDuration };
 
 // ---------------------------------------------------------------------------
-// Reducer — every state transition lives here
+// Reducer — state transitions
 // ---------------------------------------------------------------------------
 
 function reducer(state: State, action: Action): State {
   switch (action.type) {
     case 'TYPE': {
-      // Guard: no typing past end or after completion
       if (state.testState === 'finished') return state;
       if (state.typed.length >= state.passage.length) return state;
 
       const newTyped = state.typed + action.char;
       const isComplete = newTyped.length === state.passage.length;
+      const isFirstChar = state.testState === 'idle';
+      const startTimeMs = isFirstChar ? action.nowMs : state.startTimeMs;
 
-      // Transition: idle → running on first character; running → finished when done
-      const testState: TestState = isComplete
-        ? 'finished'
-        : state.testState === 'idle'
-        ? 'running'
-        : state.testState;
+      const testState: TestState = isComplete ? 'finished' : 'running';
+      const endTimeMs = isComplete ? action.nowMs : null;
 
-      return { ...state, typed: newTyped, testState };
+      return {
+        ...state,
+        typed: newTyped,
+        testState,
+        startTimeMs,
+        endTimeMs,
+      };
     }
 
     case 'BACKSPACE': {
-      // Guard: no backspace when finished or nothing typed yet
       if (state.testState === 'finished') return state;
       if (state.typed.length === 0) return state;
-      // Simply shorten the typed string — buildDisplay recalculates all states
       return { ...state, typed: state.typed.slice(0, -1) };
     }
 
-    case 'RESET':
-      return { passage: getRandomPassage(), typed: '', testState: 'idle' };
+    case 'TICK': {
+      if (state.testState !== 'running' || state.startTimeMs === null) return state;
+      const elapsedSeconds = (action.nowMs - state.startTimeMs) / 1000;
+      if (elapsedSeconds >= state.duration) {
+        return {
+          ...state,
+          testState: 'finished',
+          endTimeMs: state.startTimeMs + state.duration * 1000,
+        };
+      }
+      return state;
+    }
+
+    case 'SET_DURATION': {
+      if (state.testState === 'running') return state;
+      return {
+        ...state,
+        duration: action.duration,
+        typed: '',
+        testState: 'idle',
+        startTimeMs: null,
+        endTimeMs: null,
+        passage: getRandomPassage(),
+      };
+    }
+
+    case 'RESET': {
+      const nextDuration = action.duration ?? state.duration;
+      return {
+        passage: getRandomPassage(),
+        typed: '',
+        testState: 'idle',
+        duration: nextDuration,
+        startTimeMs: null,
+        endTimeMs: null,
+      };
+    }
   }
 }
 
 function makeInitialState(): State {
-  return { passage: getRandomPassage(), typed: '', testState: 'idle' };
+  return {
+    passage: getRandomPassage(),
+    typed: '',
+    testState: 'idle',
+    duration: 30,
+    startTimeMs: null,
+    endTimeMs: null,
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -71,8 +119,11 @@ function makeInitialState(): State {
 export interface UseTypingReturn {
   display: CharDisplay[];
   testState: TestState;
+  duration: TestDuration;
+  metrics: TypingMetrics;
   handleKeyDown: (e: KeyboardEvent) => void;
-  reset: () => void;
+  setDuration: (duration: TestDuration) => void;
+  reset: (duration?: TestDuration) => void;
 }
 
 // ---------------------------------------------------------------------------
@@ -81,34 +132,64 @@ export interface UseTypingReturn {
 
 export function useTyping(): UseTypingReturn {
   const [state, dispatch] = useReducer(reducer, undefined, makeInitialState);
+  const [nowMs, setNowMs] = useState<number>(() => Date.now());
 
-  /**
-   * Handles raw keyboard events from the hidden input.
-   * Only Backspace and single printable characters are acted on.
-   * Keyboard shortcuts (Ctrl/Alt/Meta + key) are ignored.
-   */
-  const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    if (e.key === 'Backspace') {
+  useEffect(() => {
+    if (state.testState !== 'running') return;
+
+    setNowMs(Date.now());
+
+    const interval = setInterval(() => {
+      const current = Date.now();
+      setNowMs(current);
+      dispatch({ type: 'TICK', nowMs: current });
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [state.testState]);
+
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Backspace') {
+        e.preventDefault();
+        dispatch({ type: 'BACKSPACE' });
+        return;
+      }
+
+      if (e.key.length !== 1) return;
+      if (e.ctrlKey || e.altKey || e.metaKey) return;
+
       e.preventDefault();
-      dispatch({ type: 'BACKSPACE' });
-      return;
-    }
+      dispatch({ type: 'TYPE', char: e.key, nowMs: Date.now() });
+    },
+    []
+  );
 
-    // Single printable character — length check excludes "ArrowLeft", "Enter", etc.
-    if (e.key.length !== 1) return;
-
-    // Let Ctrl/Alt/Meta shortcuts (copy, paste, etc.) fall through
-    if (e.ctrlKey || e.altKey || e.metaKey) return;
-
-    e.preventDefault();
-    dispatch({ type: 'TYPE', char: e.key });
-  }, []); // dispatch is stable; no deps needed
-
-  const reset = useCallback(() => {
-    dispatch({ type: 'RESET' });
+  const setDuration = useCallback((duration: TestDuration) => {
+    dispatch({ type: 'SET_DURATION', duration });
   }, []);
 
-  const display = buildDisplay(state.passage, state.typed);
+  const reset = useCallback((duration?: TestDuration) => {
+    dispatch({ type: 'RESET', duration });
+  }, []);
 
-  return { display, testState: state.testState, handleKeyDown, reset };
+  const display = buildDisplay(state.passage, state.typed, state.testState === 'finished');
+  const metrics = calculateMetrics(
+    state.passage,
+    state.typed,
+    state.duration,
+    state.startTimeMs,
+    state.endTimeMs,
+    nowMs
+  );
+
+  return {
+    display,
+    testState: state.testState,
+    duration: state.duration,
+    metrics,
+    handleKeyDown,
+    setDuration,
+    reset,
+  };
 }
