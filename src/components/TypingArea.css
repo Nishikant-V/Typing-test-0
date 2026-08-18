@@ -19,6 +19,7 @@
   -webkit-backdrop-filter: var(--glass-surface-blur);
   box-shadow: var(--glass-surface-shadow);
   border-radius: var(--r-lg);
+  transition: background-color var(--ease-base), box-shadow var(--ease-base);
 }
 
 /* ============================================================
@@ -52,8 +53,8 @@
   align-items: center;
   flex-wrap: wrap;
   gap: var(--s-3) var(--s-4);
-  padding-bottom: var(--s-2);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: var(--s-3);
+  border-bottom: 1px solid var(--c-border);
 }
 
 .typing-area__controls {
@@ -66,11 +67,15 @@
 .typing-area__modes {
   display: inline-flex;
   gap: 2px;
-  background: rgba(0, 0, 0, 0.35);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--c-border);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15);
   border-radius: 99px;
   padding: 3px;
+}
+
+[data-theme="light"] .typing-area__modes {
+  background: rgba(0, 0, 0, 0.05);
 }
 
 .typing-area__mode-btn {
@@ -96,8 +101,8 @@
 .typing-area__mode-btn--active {
   color: var(--c-accent);
   font-weight: 600;
-  background-color: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  background-color: var(--c-surface);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.12);
   border-color: rgba(200, 176, 130, 0.25);
 }
 
@@ -127,8 +132,8 @@
 
 .typing-area__restart-icon-btn:hover {
   color: var(--c-accent);
-  background-color: #202227;
-  border-color: rgba(200, 176, 130, 0.3);
+  background-color: var(--c-surface);
+  border-color: var(--c-accent);
   transform: rotate(60deg);
 }
 
@@ -181,14 +186,16 @@
 }
 
 /* ============================================================
-   Passage container — Functional Monospace
+   Passage container — Centered 68ch Measure inside Wider Canvas
    ============================================================ */
 .typing-area__passage {
   line-height: 1.85;
-  max-width: 65ch;
+  max-width: 68ch;
+  margin: 0 auto;
+  width: 100%;
   overflow-wrap: break-word;
   word-break: break-word;
-  padding: var(--s-2) 0;
+  padding: var(--s-4) 0;
   transition: opacity var(--ease-base);
 }
 
@@ -197,7 +204,7 @@
 }
 
 /* ============================================================
-   Characters — 100% WCAG AA Contrast on Glass
+   Characters — Monospace & High Contrast
    ============================================================ */
 .char {
   font-family: var(--f-mono);
@@ -207,11 +214,11 @@
 }
 
 .char--untyped {
-  color: #555b63;
+  color: var(--c-untyped);
 }
 
 .char--correct {
-  color: #ffffff;
+  color: var(--c-text-1);
 }
 
 .char--incorrect {
@@ -219,7 +226,7 @@
 }
 
 .char--current {
-  color: #555b63;
+  color: var(--c-untyped);
 }
 
 .char--current::before {
@@ -255,6 +262,7 @@
   color: var(--c-text-3);
   letter-spacing: 0.06em;
   text-transform: uppercase;
+  text-align: center;
   user-select: none;
 }
 

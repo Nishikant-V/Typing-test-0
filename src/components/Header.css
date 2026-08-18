@@ -11,6 +11,7 @@
   backdrop-filter: var(--glass-chrome-blur);
   -webkit-backdrop-filter: var(--glass-chrome-blur);
   box-shadow: var(--glass-chrome-shadow);
+  transition: background-color var(--ease-base), box-shadow var(--ease-base);
 }
 
 .header__inner {
@@ -51,8 +52,40 @@
   text-transform: uppercase;
 }
 
-.header__wordmark:hover {
+.header__brand:hover .header__wordmark {
   opacity: 0.85;
+}
+
+/* Theme Toggle Button */
+.header__theme-toggle {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  color: var(--c-text-2);
+  width: 36px;
+  height: 36px;
+  border-radius: 99px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: color var(--ease-fast), background-color var(--ease-fast), transform var(--ease-fast), border-color var(--ease-fast);
+}
+
+.header__theme-toggle:hover {
+  color: var(--c-accent);
+  transform: scale(1.06);
+  border-color: var(--c-accent);
+}
+
+.header__theme-icon {
+  width: 18px;
+  height: 18px;
+  transition: transform var(--ease-fast);
+}
+
+.header__theme-toggle:active .header__theme-icon {
+  transform: rotate(20deg) scale(0.9);
 }
 
 @media (max-height: 720px) {

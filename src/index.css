@@ -10,21 +10,22 @@
 }
 
 /* ============================================================
-   Design Tokens — Liquid Glass System (Desaturated Dusty Ochre Accent)
+   Design Tokens — Liquid Glass System & Theme Variables
    ============================================================ */
-:root {
+:root,
+[data-theme="dark"] {
   /* --- Colors --- */
   --c-bg:      #0b0c0e;   /* deep page background      */
   --c-surface: #18191c;   /* solid surface for controls*/
   --c-border:  #24262b;   /* dividers, subtle rules    */
 
   --c-text-1: #ffffff;   /* primary — 100% WCAG AA white contrast */
-  --c-text-2: #9aa0a6;   /* secondary — labels & metadata       */
+  --c-text-2: #a1a8b0;   /* secondary — labels & metadata       */
   --c-text-3: #6b7280;   /* muted — placeholders & hints        */
 
-  /* Desaturated Dusty Ochre / Champagne Accent (Apple Sequoia style) */
+  /* Desaturated Dusty Ochre Accent */
   --c-accent:     #c8b082;
-  --c-accent-sub: rgba(200, 176, 130, 0.14); /* faint accent fill */
+  --c-accent-sub: rgba(200, 176, 130, 0.14);
 
   /* --- Liquid Glass Tiers --- */
   /* Tier 1: Chrome (Header) */
@@ -38,24 +39,26 @@
   --glass-surface-shadow:    0 12px 32px rgba(0, 0, 0, 0.35);
 
   /* Tier 3: Summary Cards & Elevated Surfaces */
-  --glass-card-bg:           rgba(22, 24, 28, 0.14);
+  --glass-card-bg:           rgba(22, 24, 28, 0.12);
   --glass-card-shadow:       0 6px 20px rgba(0, 0, 0, 0.25);
 
-  /* Internal Refraction Gradient */
+  /* Internal Refraction & Directional Specular Lighting */
   --glass-refraction-bg:     linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.01) 100%);
+  --glass-directional-edge:  linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 35%, rgba(255, 255, 255, 0) 75%);
 
-  /* Directional Specular Lighting (Top-Left Light Source, 0.40 Alpha at Top-Left) */
-  --glass-directional-edge:  linear-gradient(135deg, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0.08) 35%, rgba(255, 255, 255, 0) 75%);
-
-  /* Functional colors — typing feedback only */
+  /* Functional colors — typing feedback */
   --c-correct:   #4ade80;
   --c-incorrect: #f87171;
-  --c-pending:   var(--c-text-3);
+  --c-untyped:   #555b63;
+
+  /* Ambient Background Gradients */
+  --bg-ambient-1: radial-gradient(ellipse 120% 70% at 50% -20%, rgba(200, 176, 130, 0.12), transparent 75%);
+  --bg-ambient-2: radial-gradient(ellipse 70% 50% at 15% 35%, rgba(75, 90, 135, 0.33), transparent 70%);
+  --bg-ambient-3: radial-gradient(ellipse 75% 55% at 85% 65%, rgba(65, 75, 110, 0.30), transparent 70%);
+  --bg-ambient-4: radial-gradient(ellipse 80% 60% at 20% 90%, rgba(55, 65, 95, 0.27), transparent 70%);
 
   /* --- Typography --- */
-  /* UI Chrome & Headings: System Sans-Serif font stack */
   --f-ui:   -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", system-ui, sans-serif;
-  /* Functional Monospace: ONLY for passage characters & numeric stat values */
   --f-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
 
   /* Type scale */
@@ -67,7 +70,7 @@
   --t-xl:   1.5rem;     /* 24px */
   --t-2xl:  2rem;       /* 32px */
 
-  /* --- Spacing (8px grid) --- */
+  /* --- Spacing --- */
   --s-1:  0.25rem;   /*  4px */
   --s-2:  0.5rem;    /*  8px */
   --s-3:  0.75rem;   /* 12px */
@@ -77,11 +80,9 @@
   --s-8:  2rem;      /* 32px */
   --s-10: 2.5rem;    /* 40px */
   --s-12: 3rem;      /* 48px */
-  --s-16: 4rem;      /* 64px */
-  --s-20: 5rem;      /* 80px */
 
-  /* --- Layout --- */
-  --content-w: 960px;
+  /* --- Layout (Widened Desktop Canvas) --- */
+  --content-w: min(1600px, 94vw);
 
   /* --- Radii --- */
   --r-sm: 4px;
@@ -91,6 +92,47 @@
   /* --- Transitions --- */
   --ease-fast: 120ms ease;
   --ease-base: 200ms ease;
+}
+
+/* ============================================================
+   Light Theme Override
+   ============================================================ */
+[data-theme="light"] {
+  --c-bg:      #f4f5f8;   /* warm light gray / off-white */
+  --c-surface: #ffffff;   /* crisp white elevated surface */
+  --c-border:  #e2e6eb;   /* subtle dividers */
+
+  --c-text-1: #111827;   /* deep rich charcoal text (15:1 WCAG AA) */
+  --c-text-2: #4b5563;   /* slate secondary text (7:1 WCAG AA) */
+  --c-text-3: #6b7280;   /* muted placeholders & labels */
+
+  /* Darker desaturated warm ochre for contrast against light glass */
+  --c-accent:     #8f7036;
+  --c-accent-sub: rgba(143, 112, 54, 0.12);
+
+  /* Light Glass Material Tiers */
+  --glass-chrome-bg:         rgba(255, 255, 255, 0.75);
+  --glass-chrome-blur:       blur(32px) saturate(160%);
+  --glass-chrome-shadow:     0 4px 16px rgba(0, 0, 0, 0.04);
+
+  --glass-surface-bg:        rgba(255, 255, 255, 0.78);
+  --glass-surface-blur:      blur(40px) saturate(140%) brightness(1.02);
+  --glass-surface-shadow:    0 12px 32px rgba(0, 0, 0, 0.07);
+
+  --glass-card-bg:           rgba(255, 255, 255, 0.88);
+  --glass-card-shadow:       0 6px 20px rgba(0, 0, 0, 0.05);
+
+  --glass-refraction-bg:     linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.4) 100%);
+  --glass-directional-edge:  linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(210, 215, 225, 0.5) 40%, rgba(0, 0, 0, 0.06) 100%);
+
+  --c-correct:   #15803d;   /* rich legible green */
+  --c-incorrect: #dc2626;   /* rich legible red */
+  --c-untyped:   #9ca3af;   /* untyped passage char */
+
+  --bg-ambient-1: radial-gradient(ellipse 120% 70% at 50% -20%, rgba(180, 145, 80, 0.10), transparent 75%);
+  --bg-ambient-2: radial-gradient(ellipse 70% 50% at 15% 35%, rgba(160, 180, 220, 0.25), transparent 70%);
+  --bg-ambient-3: radial-gradient(ellipse 75% 55% at 85% 65%, rgba(175, 185, 220, 0.22), transparent 70%);
+  --bg-ambient-4: radial-gradient(ellipse 80% 60% at 20% 90%, rgba(165, 175, 210, 0.20), transparent 70%);
 }
 
 /* ============================================================
@@ -107,10 +149,10 @@ body {
   font-size: var(--t-base);
   background-color: var(--c-bg);
   background-image:
-    radial-gradient(ellipse 120% 70% at 50% -20%, rgba(200, 176, 130, 0.12), transparent 75%),
-    radial-gradient(ellipse 70% 50% at 15% 35%, rgba(75, 90, 135, 0.33), transparent 70%),
-    radial-gradient(ellipse 75% 55% at 85% 65%, rgba(65, 75, 110, 0.30), transparent 70%),
-    radial-gradient(ellipse 80% 60% at 20% 90%, rgba(55, 65, 95, 0.27), transparent 70%);
+    var(--bg-ambient-1),
+    var(--bg-ambient-2),
+    var(--bg-ambient-3),
+    var(--bg-ambient-4);
   background-attachment: fixed;
   color: var(--c-text-1);
   line-height: 1.6;
@@ -118,6 +160,7 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color var(--ease-base), color var(--ease-base);
 }
 
 #root {
@@ -127,7 +170,7 @@ body {
 }
 
 /* ============================================================
-   Focus — visible keyboard focus for all interactive elements
+   Focus — visible keyboard focus
    ============================================================ */
 :focus-visible {
   outline: 2px solid var(--c-accent);
@@ -151,7 +194,7 @@ body {
   .results,
   .stats-card,
   .stats-history__table-wrapper {
-    background-color: #16171a !important;
+    background-color: var(--c-surface) !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
