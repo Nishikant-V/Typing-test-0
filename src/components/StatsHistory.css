@@ -44,11 +44,11 @@
   color: var(--c-incorrect);
 }
 
-/* --- Asymmetric Summary Layout (1 Featured Hero Tile + 3 Compact Tiles) --- */
+/* --- Asymmetric Summary Layout (1 Featured Hero Tile + 2-Column Subgrid) --- */
 .stats-history__summary {
   display: grid;
-  grid-template-columns: 1.3fr 2fr;
-  gap: var(--s-4);
+  grid-template-columns: 1fr 2fr;
+  gap: var(--s-3);
   align-items: stretch;
 }
 

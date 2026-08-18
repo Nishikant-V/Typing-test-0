@@ -25,6 +25,7 @@ export const StatsHistory: React.FC<StatsHistoryProps> = ({
 }) => {
   const stats = calculateStatistics(history);
   const recentTests = history.slice(0, 10);
+  const hasHistory = history.length > 0;
 
   const handleClearClick = () => {
     if (window.confirm('Are you sure you want to clear all test history?')) {
@@ -37,7 +38,7 @@ export const StatsHistory: React.FC<StatsHistoryProps> = ({
       {/* Header */}
       <div className="stats-history__header">
         <h2 className="stats-history__title">Statistics &amp; History</h2>
-        {history.length > 0 && (
+        {hasHistory && (
           <button
             type="button"
             className="stats-history__clear-btn"
@@ -48,7 +49,7 @@ export const StatsHistory: React.FC<StatsHistoryProps> = ({
         )}
       </div>
 
-      {/* Aggregate Stats Summary — 1-Hero + 3-Compact Asymmetric Layout */}
+      {/* Aggregate Stats Summary — Pixel-aligned 1fr + 2fr layout */}
       <div className="stats-history__summary">
         {/* Personal Best Featured Hero Tile */}
         <div className="stats-card stats-card--hero">
@@ -60,9 +61,11 @@ export const StatsHistory: React.FC<StatsHistoryProps> = ({
           </div>
           <div className="stats-card__hero-body">
             <span className="stats-card__value stats-card__value--hero">
-              {stats.personalBestWpm}
+              {stats.personalBestWpm > 0 ? stats.personalBestWpm : '—'}
             </span>
-            <span className="stats-card__unit stats-card__unit--hero">WPM</span>
+            {stats.personalBestWpm > 0 && (
+              <span className="stats-card__unit stats-card__unit--hero">WPM</span>
+            )}
           </div>
         </div>
 
@@ -70,15 +73,21 @@ export const StatsHistory: React.FC<StatsHistoryProps> = ({
         <div className="stats-card__secondary-grid">
           <div className="stats-card">
             <span className="stats-card__label">Tests Completed</span>
-            <span className="stats-card__value">{stats.testsCompleted}</span>
+            <span className="stats-card__value">
+              {stats.testsCompleted > 0 ? stats.testsCompleted : '0'}
+            </span>
           </div>
           <div className="stats-card">
             <span className="stats-card__label">Average WPM</span>
-            <span className="stats-card__value">{stats.averageWpm}</span>
+            <span className="stats-card__value">
+              {stats.averageWpm > 0 ? stats.averageWpm : '—'}
+            </span>
           </div>
           <div className="stats-card">
             <span className="stats-card__label">Average Accuracy</span>
-            <span className="stats-card__value">{stats.averageAccuracy}%</span>
+            <span className="stats-card__value">
+              {stats.averageAccuracy > 0 ? `${stats.averageAccuracy}%` : '—'}
+            </span>
           </div>
         </div>
       </div>
@@ -87,15 +96,21 @@ export const StatsHistory: React.FC<StatsHistoryProps> = ({
       <div className="stats-history__modes-grid">
         <div className="stats-mode">
           <span className="stats-mode__label">15s Best</span>
-          <span className="stats-mode__value">{stats.best15sWpm} WPM</span>
+          <span className="stats-mode__value">
+            {stats.best15sWpm > 0 ? `${stats.best15sWpm} WPM` : '—'}
+          </span>
         </div>
         <div className="stats-mode">
           <span className="stats-mode__label">30s Best</span>
-          <span className="stats-mode__value">{stats.best30sWpm} WPM</span>
+          <span className="stats-mode__value">
+            {stats.best30sWpm > 0 ? `${stats.best30sWpm} WPM` : '—'}
+          </span>
         </div>
         <div className="stats-mode">
           <span className="stats-mode__label">60s Best</span>
-          <span className="stats-mode__value">{stats.best60sWpm} WPM</span>
+          <span className="stats-mode__value">
+            {stats.best60sWpm > 0 ? `${stats.best60sWpm} WPM` : '—'}
+          </span>
         </div>
       </div>
 
