@@ -6,7 +6,7 @@
   width: 100%;
   margin-top: var(--s-10);
   padding-top: var(--s-6);
-  border-top: 1px solid var(--glass-border);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   flex-direction: column;
   gap: var(--s-5);
@@ -44,7 +44,7 @@
   color: var(--c-incorrect);
 }
 
-/* --- Summary Grid — Functional Surface Tier Glass Cards --- */
+/* --- Summary Grid — Card Tier Glass Cards (0.16 Opacity, 0 6px 20px shadow) --- */
 .stats-history__summary-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
@@ -55,12 +55,14 @@
   display: flex;
   flex-direction: column;
   gap: var(--s-1);
-  background-image: var(--glass-refraction-bg);
-  background-color: var(--glass-surface-bg);
+  border: 1px solid transparent;
+  background:
+    var(--glass-refraction-bg) padding-box,
+    var(--glass-card-bg) padding-box,
+    var(--glass-directional-edge) border-box;
   backdrop-filter: var(--glass-surface-blur);
   -webkit-backdrop-filter: var(--glass-surface-blur);
-  border: none;
-  box-shadow: var(--glass-shadow), var(--glass-specular-inset);
+  box-shadow: var(--glass-card-shadow);
   border-radius: var(--r-md);
   padding: var(--s-3) var(--s-4);
   transition: opacity var(--ease-fast);
@@ -158,12 +160,14 @@
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  background-image: var(--glass-refraction-bg);
-  background-color: var(--glass-surface-bg);
+  border: 1px solid transparent;
+  background:
+    var(--glass-refraction-bg) padding-box,
+    var(--glass-surface-bg) padding-box,
+    var(--glass-directional-edge) border-box;
   backdrop-filter: var(--glass-surface-blur);
   -webkit-backdrop-filter: var(--glass-surface-blur);
-  border: none;
-  box-shadow: var(--glass-shadow), var(--glass-specular-inset);
+  box-shadow: var(--glass-surface-shadow);
   border-radius: var(--r-md);
 }
 
@@ -184,7 +188,7 @@
   letter-spacing: 0.06em;
   font-weight: 600;
   padding: var(--s-3);
-  border-bottom: 1px solid var(--glass-border);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   background: rgba(255, 255, 255, 0.03);
 }
 

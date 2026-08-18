@@ -1,5 +1,5 @@
 /* ============================================================
-   Typing Area — Tier 1 Glass Outer Container & Passage Priority
+   Typing Area — Tier 2 Functional Surface Glass Container
    ============================================================ */
 
 .typing-area {
@@ -10,12 +10,14 @@
   display: flex;
   flex-direction: column;
   gap: var(--s-4);
-  background-image: var(--glass-refraction-bg);
-  background-color: var(--glass-chrome-bg);
-  backdrop-filter: var(--glass-chrome-blur);
-  -webkit-backdrop-filter: var(--glass-chrome-blur);
-  border: none;
-  box-shadow: var(--glass-shadow), var(--glass-specular-inset);
+  border: 1px solid transparent;
+  background:
+    var(--glass-refraction-bg) padding-box,
+    var(--glass-surface-bg) padding-box,
+    var(--glass-directional-edge) border-box;
+  backdrop-filter: var(--glass-surface-blur);
+  -webkit-backdrop-filter: var(--glass-surface-blur);
+  box-shadow: var(--glass-surface-shadow);
   border-radius: var(--r-lg);
 }
 
@@ -51,7 +53,7 @@
   flex-wrap: wrap;
   gap: var(--s-3) var(--s-4);
   padding-bottom: var(--s-2);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .typing-area__controls {

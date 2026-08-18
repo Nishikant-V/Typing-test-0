@@ -3,12 +3,14 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  background-image: var(--glass-refraction-bg);
-  background-color: var(--glass-chrome-bg);
+  border: 1px solid transparent;
+  background:
+    var(--glass-refraction-bg) padding-box,
+    var(--glass-chrome-bg) padding-box,
+    var(--glass-directional-edge) border-box;
   backdrop-filter: var(--glass-chrome-blur);
   -webkit-backdrop-filter: var(--glass-chrome-blur);
-  border: none;
-  box-shadow: var(--glass-shadow), var(--glass-specular-inset);
+  box-shadow: var(--glass-chrome-shadow);
 }
 
 .header__inner {

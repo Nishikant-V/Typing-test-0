@@ -29,23 +29,22 @@
   /* Tier 1: Chrome (Header & Outer Typing Container) */
   --glass-chrome-bg:         rgba(18, 19, 22, 0.12);
   --glass-chrome-blur:       blur(20px) saturate(160%);
+  --glass-chrome-shadow:     0 4px 16px rgba(0, 0, 0, 0.2);
 
   /* Tier 2: Functional Surfaces (Results Panel / Recent History) */
   --glass-surface-bg:        rgba(20, 21, 24, 0.15);
   --glass-surface-blur:      blur(30px) saturate(140%) brightness(1.05);
+  --glass-surface-shadow:    0 12px 32px rgba(0, 0, 0, 0.35);
 
-  /* Tier 3: Elevated elements */
-  --glass-elevated-bg:       rgba(26, 28, 32, 0.25);
-  --glass-elevated-blur:     blur(40px) saturate(150%);
+  /* Tier 3: Summary Cards & Elevated Surfaces */
+  --glass-card-bg:           rgba(22, 24, 28, 0.16);
+  --glass-card-shadow:       0 6px 20px rgba(0, 0, 0, 0.25);
 
   /* Internal Refraction Gradient */
   --glass-refraction-bg:     linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.01) 100%);
 
-  /* Specular Edge Highlights & Depth Shadows */
-  --glass-border:            rgba(255, 255, 255, 0.1);
-  --glass-specular-top:      rgba(255, 255, 255, 0.22);
-  --glass-specular-inset:    inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
-  --glass-shadow:            0 16px 40px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.25);
+  /* Directional Specular Lighting (Top-Left Light Source, 0% at Bottom-Right) */
+  --glass-directional-edge:  linear-gradient(135deg, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0.06) 35%, rgba(255, 255, 255, 0) 75%);
 
   /* Functional colors — typing feedback only */
   --c-correct:   #4ade80;
@@ -93,7 +92,7 @@
 
 /* ============================================================
    Base & Atmospheric Background
-   Quiet, non-animating ambient luminance field with high contrast for glass refraction
+   Full-page ambient luminance field spanning the full scroll height
    ============================================================ */
 html {
   font-size: 16px;
@@ -106,9 +105,10 @@ body {
   font-size: var(--t-base);
   background-color: var(--c-bg);
   background-image:
-    radial-gradient(ellipse 90% 60% at 50% -10%, rgba(226, 183, 20, 0.16), transparent 70%),
-    radial-gradient(ellipse 65% 45% at 15% 55%, rgba(70, 85, 125, 0.22), transparent 70%),
-    radial-gradient(ellipse 65% 55% at 85% 75%, rgba(55, 65, 90, 0.18), transparent 70%);
+    radial-gradient(ellipse 90% 50% at 50% -10%, rgba(226, 183, 20, 0.16), transparent 70%),
+    radial-gradient(ellipse 70% 50% at 15% 35%, rgba(75, 90, 135, 0.22), transparent 70%),
+    radial-gradient(ellipse 75% 55% at 85% 65%, rgba(65, 75, 110, 0.2), transparent 70%),
+    radial-gradient(ellipse 80% 60% at 20% 90%, rgba(55, 65, 95, 0.18), transparent 70%);
   background-attachment: fixed;
   color: var(--c-text-1);
   line-height: 1.6;
@@ -147,6 +147,7 @@ body {
   .header,
   .typing-area,
   .results,
+  .stats-card,
   .stats-history__table-wrapper {
     background-color: #16171a !important;
     backdrop-filter: none !important;
