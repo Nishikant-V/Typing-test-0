@@ -1,5 +1,6 @@
-import React, { useRef, useState, useCallback, memo } from 'react';
+import React, { useRef, useState, useCallback, useEffect, memo } from 'react';
 import { useTyping } from '../hooks/useTyping';
+import { ResultsDisplay } from './ResultsDisplay';
 import type { CharDisplay, TestDuration } from '../types';
 import './TypingArea.css';
 
@@ -19,10 +20,7 @@ const Char = memo<CharProps>(({ display }) => {
 
   return (
     <span className={className} aria-hidden="true">
-      {/*
-        Non-breaking space keeps the character's visual width intact
-        so the cursor and underline decorations render correctly on spaces.
-      */}
+      {/* Non-breaking space keeps visual width intact for cursor/underline */}
       {isSpace ? '\u00A0' : char}
     </span>
   );
@@ -54,21 +52,44 @@ const TypingArea: React.FC = () => {
     inputRef.current?.focus();
   }, []);
 
+  const handleRestart = useCallback(() => {
+    reset();
+    focusInput();
+  }, [reset, focusInput]);
+
   /**
-   * Extends the hook's keydown handler with one app-level concern:
-   * pressing Enter when the test is finished triggers a reset.
+   * Extends the hook's keydown handler with app-level concern:
+   * pressing Enter when test is finished restarts test and focuses input.
    */
   const handleInputKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (testState === 'finished' && e.key === 'Enter') {
         e.preventDefault();
-        reset();
+        handleRestart();
         return;
       }
       handleKeyDown(e);
     },
-    [testState, handleKeyDown, reset]
+    [testState, handleKeyDown, handleRestart]
   );
+
+  /**
+   * Global keyboard shortcut: pressing Enter when test is finished
+   * restarts the test and focuses the input even if focus was blurred.
+   */
+  useEffect(() => {
+    if (testState !== 'finished') return;
+
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleRestart();
+      }
+    };
+
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, [testState, handleRestart]);
 
   const sectionClass = [
     'typing-area',
@@ -98,7 +119,7 @@ const TypingArea: React.FC = () => {
         spellCheck={false}
       />
 
-      {/* Toolbar — Controls & Live Metrics */}
+      {/* Toolbar — Controls & Live Metrics (shown during idle / running) */}
       <div className="typing-area__toolbar" onClick={(e) => e.stopPropagation()}>
         <div className="typing-area__controls">
           <div className="typing-area__modes" role="group" aria-label="Test duration selector">
@@ -124,10 +145,7 @@ const TypingArea: React.FC = () => {
           <button
             type="button"
             className="typing-area__restart-icon-btn"
-            onClick={() => {
-              reset();
-              focusInput();
-            }}
+            onClick={handleRestart}
             aria-label="Restart test"
             title="Restart test"
           >
@@ -135,64 +153,43 @@ const TypingArea: React.FC = () => {
           </button>
         </div>
 
-        {/* Live Metrics */}
-        <div className="typing-area__metrics" aria-label="Live test metrics">
-          <div className="typing-area__metric">
-            <span className="typing-area__metric-label">TIME</span>
-            <span className="typing-area__metric-val typing-area__metric-val--accent">
-              {metrics.timeRemaining}s
-            </span>
+        {/* Live Metrics during test */}
+        {testState !== 'finished' && (
+          <div className="typing-area__metrics" aria-label="Live test metrics">
+            <div className="typing-area__metric">
+              <span className="typing-area__metric-label">TIME</span>
+              <span className="typing-area__metric-val typing-area__metric-val--accent">
+                {metrics.timeRemaining}s
+              </span>
+            </div>
+            <div className="typing-area__metric">
+              <span className="typing-area__metric-label">WPM</span>
+              <span className="typing-area__metric-val">{metrics.wpm}</span>
+            </div>
+            <div className="typing-area__metric">
+              <span className="typing-area__metric-label">ACC</span>
+              <span className="typing-area__metric-val">{metrics.accuracy}%</span>
+            </div>
           </div>
-          <div className="typing-area__metric">
-            <span className="typing-area__metric-label">WPM</span>
-            <span className="typing-area__metric-val">{metrics.wpm}</span>
-          </div>
-          <div className="typing-area__metric">
-            <span className="typing-area__metric-label">ACC</span>
-            <span className="typing-area__metric-val">{metrics.accuracy}%</span>
-          </div>
-          <div className="typing-area__metric">
-            <span className="typing-area__metric-label">CHARS</span>
-            <span className="typing-area__metric-val">
-              <span className="typing-area__correct-count">{metrics.correctChars}</span>
-              <span className="typing-area__slash">/</span>
-              <span className="typing-area__incorrect-count">{metrics.incorrectChars}</span>
-            </span>
-          </div>
-        </div>
+        )}
       </div>
 
       {/* Passage Display */}
-      <div className="typing-area__passage" aria-hidden="true">
-        {display.map((charDisplay, i) => (
-          <Char key={i} display={charDisplay} />
-        ))}
-      </div>
-
-      {/* Finished State Summary */}
-      {testState === 'finished' && (
-        <div className="typing-area__finished" role="status">
-          <div className="typing-area__finished-info">
-            <p className="typing-area__finished-title">Test Complete</p>
-            <p className="typing-area__finished-stats">
-              {metrics.wpm} WPM &bull; {metrics.accuracy}% Accuracy &bull; {metrics.correctChars} correct / {metrics.incorrectChars} errors
-            </p>
-          </div>
-          <button
-            type="button"
-            className="typing-area__restart"
-            onClick={(e) => {
-              e.stopPropagation();
-              reset();
-              focusInput();
-            }}
-          >
-            Next passage <span aria-hidden="true">↵</span>
-          </button>
-          <p className="typing-area__hint" aria-hidden="true">
-            or press Enter
-          </p>
+      {testState !== 'finished' && (
+        <div className="typing-area__passage" aria-hidden="true">
+          {display.map((charDisplay, i) => (
+            <Char key={i} display={charDisplay} />
+          ))}
         </div>
+      )}
+
+      {/* Finished State Results Experience */}
+      {testState === 'finished' && (
+        <ResultsDisplay
+          metrics={metrics}
+          duration={duration}
+          onRestart={handleRestart}
+        />
       )}
 
       {/* Focus hint — shown only while not focused and test is not finished */}

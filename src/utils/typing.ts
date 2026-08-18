@@ -32,7 +32,8 @@ export function buildDisplay(passage: string, typed: string, isFinished = false)
 /**
  * Pure function — calculates live typing metrics based on passage, typed string, duration, and timestamps.
  *
- * WPM = (correct characters / 5) / elapsed minutes
+ * Net WPM = (correct characters / 5) / elapsed minutes
+ * Raw WPM = (total typed characters / 5) / elapsed minutes
  * Accuracy = (correct characters / total typed characters) * 100
  */
 export function calculateMetrics(
@@ -55,7 +56,7 @@ export function calculateMetrics(
   }
 
   const totalTyped = typed.length;
-  const accuracy = totalTyped === 0 ? 100 : Math.round((correctChars / totalTyped) * 100);
+  const rawAccuracy = totalTyped === 0 ? 100 : Math.round((correctChars / totalTyped) * 100);
 
   let elapsedSeconds = 0;
   if (startTimeMs !== null) {
@@ -63,19 +64,31 @@ export function calculateMetrics(
     elapsedSeconds = Math.max(0, (end - startTimeMs) / 1000);
   }
 
-  let wpm = 0;
+  let rawNetWpm = 0;
+  let rawGrossWpm = 0;
+
   if (elapsedSeconds > 0) {
     const elapsedMinutes = elapsedSeconds / 60;
-    wpm = Math.round((correctChars / 5) / elapsedMinutes);
+    rawNetWpm = (correctChars / 5) / elapsedMinutes;
+    rawGrossWpm = (totalTyped / 5) / elapsedMinutes;
   }
+
+  const wpm = Number.isFinite(rawNetWpm) ? Math.max(0, Math.round(rawNetWpm)) : 0;
+  const rawWpm = Number.isFinite(rawGrossWpm) ? Math.max(0, Math.round(rawGrossWpm)) : 0;
+  const accuracy = Number.isFinite(rawAccuracy) ? Math.min(100, Math.max(0, rawAccuracy)) : 100;
+  const safeElapsedSeconds = Number.isFinite(elapsedSeconds)
+    ? Math.max(0, Math.round(elapsedSeconds * 10) / 10)
+    : 0;
 
   const timeRemaining = Math.max(0, Math.ceil(durationSeconds - elapsedSeconds));
 
   return {
     wpm,
+    rawWpm,
     accuracy,
     correctChars,
     incorrectChars,
     timeRemaining,
+    elapsedSeconds: safeElapsedSeconds,
   };
 }

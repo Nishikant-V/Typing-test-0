@@ -16,8 +16,10 @@ export interface CharDisplay {
 /** Real-time metrics calculated for the current typing test session. */
 export interface TypingMetrics {
   wpm: number;
+  rawWpm: number;
   accuracy: number;
   correctChars: number;
   incorrectChars: number;
   timeRemaining: number;
+  elapsedSeconds: number;
 }
