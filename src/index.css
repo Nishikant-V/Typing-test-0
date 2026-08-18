@@ -1,0 +1,145 @@
+/* ============================================================
+   Box-sizing reset
+   ============================================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ============================================================
+   Design Tokens
+   All hard-coded values live here. Components reference tokens only.
+   ============================================================ */
+:root {
+  /* --- Colors ---
+     One background, one surface, one border.
+     Three text levels for hierarchy.
+     One accent. Full stop.
+  */
+  --c-bg:      #111213;   /* page background          */
+  --c-surface: #191a1b;   /* slightly elevated surface */
+  --c-border:  #232425;   /* dividers, subtle rules    */
+
+  --c-text-1: #d4d4d4;   /* primary — headings, labels     */
+  --c-text-2: #737373;   /* secondary — descriptions, meta */
+  --c-text-3: #4a4a4a;   /* muted — placeholders, disabled */
+
+  --c-accent:     #e2b714;            /* amber — the one accent */
+  --c-accent-sub: rgba(226, 183, 20, 0.08); /* faint accent fill  */
+
+  /* Functional colors — reserved for typing feedback only */
+  --c-correct:   #4ade80;
+  --c-incorrect: #f87171;
+  --c-pending:   var(--c-text-3);
+
+  /* --- Typography --- */
+  --f-ui:   'Inter', system-ui, -apple-system, sans-serif;
+  --f-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+
+  /* Type scale (minor-third ratio, base 15px) */
+  --t-xs:   0.6875rem;  /* 11px */
+  --t-sm:   0.8125rem;  /* 13px */
+  --t-base: 0.9375rem;  /* 15px */
+  --t-md:   1.0625rem;  /* 17px */
+  --t-lg:   1.25rem;    /* 20px */
+  --t-xl:   1.5rem;     /* 24px */
+  --t-2xl:  2rem;       /* 32px */
+
+  /* --- Spacing (8px grid) --- */
+  --s-1:  0.25rem;   /*  4px */
+  --s-2:  0.5rem;    /*  8px */
+  --s-3:  0.75rem;   /* 12px */
+  --s-4:  1rem;      /* 16px */
+  --s-5:  1.25rem;   /* 20px */
+  --s-6:  1.5rem;    /* 24px */
+  --s-8:  2rem;      /* 32px */
+  --s-10: 2.5rem;    /* 40px */
+  --s-12: 3rem;      /* 48px */
+  --s-16: 4rem;      /* 64px */
+  --s-20: 5rem;      /* 80px */
+
+  /* --- Layout --- */
+  --content-w: 960px;  /* app shell width — typing text stays at 65ch inside */
+
+  /* --- Radii ---
+     Kept small. Rounded corners draw attention; use them sparingly.
+  */
+  --r-sm: 3px;
+  --r-md: 6px;
+
+  /* --- Transitions --- */
+  --ease-fast: 120ms ease;
+  --ease-base: 200ms ease;
+}
+
+/* ============================================================
+   Base
+   ============================================================ */
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--f-ui);
+  font-size: var(--t-base);
+  background-color: var(--c-bg);
+  color: var(--c-text-1);
+  line-height: 1.6;
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================================================
+   Focus — visible keyboard focus for all interactive elements
+   ============================================================ */
+:focus-visible {
+  outline: 2px solid var(--c-accent);
+  outline-offset: 3px;
+  border-radius: var(--r-sm);
+}
+
+/* ============================================================
+   Scrollbar
+   ============================================================ */
+::-webkit-scrollbar        { width: 5px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  { background: var(--c-border); border-radius: 99px; }
+
+/* ============================================================
+   Reduced motion
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================
+   Utility
+   ============================================================ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

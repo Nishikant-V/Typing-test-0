@@ -1,0 +1,112 @@
+/* ============================================================
+   App shell
+   ============================================================ */
+.app {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--c-bg);
+}
+
+/* ============================================================
+   Shared container
+   Centres content and constrains line length.
+   Used by main, footer — keeps alignment consistent throughout.
+   ============================================================ */
+.container {
+  width: 100%;
+  max-width: var(--content-w);
+  margin: 0 auto;
+  padding: 0 var(--s-6);
+}
+
+/* ============================================================
+   Main
+   ============================================================ */
+.main {
+  flex: 1;
+  padding: var(--s-8) 0 var(--s-12);
+}
+
+/* ============================================================
+   Intro — compact brand label above the test
+   ============================================================ */
+.intro {
+  margin-bottom: var(--s-8);
+}
+
+.intro__heading {
+  font-size: var(--t-base);
+  font-weight: 500;
+  color: var(--c-text-2);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: var(--s-2);
+}
+
+.intro__desc {
+  font-size: var(--t-md);
+  color: var(--c-text-2);
+  line-height: 1.5;
+}
+
+/* ============================================================
+   Footer
+   ============================================================ */
+.footer {
+  padding: var(--s-6) 0;
+  border-top: 1px solid var(--c-border);
+}
+
+.footer__text {
+  font-size: var(--t-xs);
+  color: var(--c-text-3);
+  letter-spacing: 0.03em;
+}
+
+/* ============================================================
+   Responsive — Tablet (≤768px)
+   ============================================================ */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 var(--s-5);
+  }
+
+  .main {
+    padding: var(--s-8) 0 var(--s-10);
+  }
+
+  .intro {
+    margin-bottom: var(--s-6);
+  }
+
+  .intro__heading {
+    font-size: var(--t-sm);
+  }
+
+  .intro__desc {
+    font-size: var(--t-base);
+  }
+}
+
+/* ============================================================
+   Responsive — Mobile (≤480px)
+   Don't just shrink: simplify.
+   ============================================================ */
+@media (max-width: 480px) {
+  .container {
+    padding: 0 var(--s-4);
+  }
+
+  .main {
+    padding: var(--s-8) 0 var(--s-10);
+  }
+
+  .intro {
+    margin-bottom: var(--s-6);
+  }
+
+  .intro__desc {
+    font-size: var(--t-sm);
+  }
+}

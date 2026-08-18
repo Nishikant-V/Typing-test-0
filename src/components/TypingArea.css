@@ -1,0 +1,188 @@
+/* ============================================================
+   Typing Area — layout shell
+   ============================================================ */
+
+.typing-area {
+  width: 100%;
+  padding: var(--s-12) 0;
+  cursor: text;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+
+/* ============================================================
+   Hidden input — keyboard focus target only
+   Uses position/size instead of display:none so browsers keep it focusable.
+   ============================================================ */
+.typing-area__input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+/* ============================================================
+   Passage container
+   max-width: 65ch keeps the line length at a comfortable reading measure.
+   line-height is on the block container, not the inline spans, so it
+   applies uniformly regardless of which character is current.
+   ============================================================ */
+.typing-area__passage {
+  line-height: 1.85;
+  max-width: 65ch;
+  transition: opacity var(--ease-base);
+}
+
+/* When the test is in-progress but focus is lost, dim the text
+   to signal that typing is paused. Idle state stays undimmed. */
+.typing-area--blurred.typing-area--running .typing-area__passage {
+  opacity: 0.35;
+}
+
+/* ============================================================
+   Characters
+   font-size on the inline span, line-height on the block parent.
+   ============================================================ */
+.char {
+  font-family: var(--f-mono);
+  font-size: var(--t-lg);    /* 20px */
+  letter-spacing: 0.01em;
+  /* Smooth color transitions between states keep the eye from being jarred */
+  transition: color var(--ease-fast);
+}
+
+/* --- State colours --- */
+.char--untyped {
+  color: var(--c-text-3);
+}
+
+.char--correct {
+  color: var(--c-text-2);
+}
+
+.char--incorrect {
+  color: var(--c-incorrect);
+}
+
+.char--current {
+  /* Current char stays untyped-coloured; the cursor ::before conveys position */
+  color: var(--c-text-3);
+}
+
+/* --- Amber cursor before the current character --- */
+.char--current::before {
+  content: '';
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  background-color: var(--c-accent);
+  border-radius: 1px;
+  vertical-align: text-bottom;
+  margin-right: 1px;
+  animation: cursor-blink 1.1s step-start infinite;
+}
+
+/* --- Incorrect space --- 
+   A space character in red is invisible; underline makes the error visible. */
+.char--space.char--incorrect {
+  text-decoration: underline;
+  text-decoration-color: var(--c-incorrect);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* ============================================================
+   Finished state
+   ============================================================ */
+.typing-area__finished {
+  padding: var(--s-4) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.typing-area__finished-msg {
+  font-family: var(--f-mono);
+  font-size: var(--t-lg);
+  color: var(--c-text-2);
+  line-height: 1.4;
+}
+
+.typing-area__restart {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  font-family: var(--f-ui);
+  font-size: var(--t-sm);
+  color: var(--c-accent);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  letter-spacing: 0.01em;
+  transition: opacity var(--ease-fast);
+}
+
+.typing-area__restart:hover {
+  opacity: 0.7;
+}
+
+/* ============================================================
+   Hint text — "click to focus" / "or press Enter"
+   Shares the same class for consistent styling.
+   ============================================================ */
+.typing-area__hint {
+  font-family: var(--f-ui);
+  font-size: var(--t-xs);
+  color: var(--c-text-3);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+/* ============================================================
+   Responsive — Tablet (≤ 768px)
+   ============================================================ */
+@media (max-width: 768px) {
+  .typing-area {
+    padding: var(--s-10) 0;
+  }
+
+  .char {
+    font-size: var(--t-md); /* 17px */
+  }
+
+  .typing-area__passage {
+    max-width: 100%;
+  }
+
+  .typing-area__finished-msg {
+    font-size: var(--t-md);
+  }
+}
+
+/* ============================================================
+   Responsive — Mobile (≤ 480px)
+   ============================================================ */
+@media (max-width: 480px) {
+  .char {
+    font-size: var(--t-base); /* 15px */
+  }
+}

@@ -1,0 +1,27 @@
+.header {
+  padding: var(--s-6) 0;
+}
+
+.header__inner {
+  max-width: var(--content-w);
+  margin: 0 auto;
+  padding: 0 var(--s-6);
+}
+
+.header__wordmark {
+  /*
+    Lowercase, tight tracking — feels like a product name, not a billboard.
+    Accent color makes it distinct without needing a logo mark.
+  */
+  font-family: var(--f-ui);
+  font-size: var(--t-md);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--c-accent);
+  text-decoration: none;
+  transition: opacity var(--ease-fast);
+}
+
+.header__wordmark:hover {
+  opacity: 0.75;
+}
