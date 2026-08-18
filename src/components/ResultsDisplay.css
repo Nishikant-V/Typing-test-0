@@ -1,5 +1,5 @@
 /* ============================================================
-   Results Display — Liquid Glass Material
+   Results Display — Tier 2 Functional Surface Glass Material
    ============================================================ */
 
 .results {
@@ -8,11 +8,11 @@
   flex-direction: column;
   gap: var(--s-5);
   padding: var(--s-6);
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
+  background: var(--glass-surface-bg);
+  backdrop-filter: var(--glass-surface-blur);
+  -webkit-backdrop-filter: var(--glass-surface-blur);
   border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow), var(--glass-inset-light);
+  box-shadow: var(--glass-shadow), var(--glass-specular-inset);
   border-radius: var(--r-lg);
   animation: fade-in var(--ease-base) both;
 }
@@ -49,7 +49,6 @@
   line-height: 1;
   color: var(--c-accent);
   letter-spacing: -0.03em;
-  text-shadow: 0 0 24px rgba(226, 183, 20, 0.2);
 }
 
 .results__wpm-label {
@@ -61,16 +60,14 @@
   letter-spacing: 0.06em;
 }
 
-/* Subtle Personal Best Badge */
+/* Subtle Personal Best Badge (Solid badge on glass panel) */
 .results__pb-badge {
   font-family: var(--f-ui);
   font-size: var(--t-xs);
   font-weight: 600;
   color: var(--c-accent);
-  background: rgba(226, 183, 20, 0.12);
-  border: 1px solid rgba(226, 183, 20, 0.3);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: var(--c-accent-sub);
+  border: 1px solid rgba(226, 183, 20, 0.25);
   border-radius: var(--r-sm);
   padding: 3px 8px;
   letter-spacing: 0.04em;
@@ -140,13 +137,12 @@
   padding: var(--s-2) var(--s-4);
   min-height: 40px;
   cursor: pointer;
-  box-shadow: 0 4px 16px rgba(226, 183, 20, 0.25);
-  transition: opacity var(--ease-fast), transform var(--ease-fast), box-shadow var(--ease-fast);
+  box-shadow: 0 4px 16px rgba(226, 183, 20, 0.22);
+  transition: opacity var(--ease-fast), transform var(--ease-fast);
 }
 
 .results__restart-btn:hover {
   opacity: 0.92;
-  box-shadow: 0 6px 20px rgba(226, 183, 20, 0.35);
 }
 
 .results__kbd {

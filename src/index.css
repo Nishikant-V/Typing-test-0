@@ -10,33 +10,41 @@
 }
 
 /* ============================================================
-   Design Tokens
-   All hard-coded values live here. Components reference tokens only.
+   Design Tokens — Liquid Glass Material System
    ============================================================ */
 :root {
   /* --- Colors --- */
-  --c-bg:      #111213;   /* page background          */
-  --c-surface: #191a1b;   /* slightly elevated surface */
-  --c-border:  #232425;   /* dividers, subtle rules    */
+  --c-bg:      #0b0c0e;   /* deep page background      */
+  --c-surface: #18191c;   /* solid surface for controls*/
+  --c-border:  #24262b;   /* dividers, subtle rules    */
 
-  --c-text-1: #d4d4d4;   /* primary — headings, labels     */
-  --c-text-2: #737373;   /* secondary — descriptions, meta */
-  --c-text-3: #4a4a4a;   /* muted — placeholders, disabled */
+  --c-text-1: #e8eaed;   /* primary — headings, typing text */
+  --c-text-2: #9aa0a6;   /* secondary — descriptions, labels*/
+  --c-text-3: #5f6368;   /* muted — placeholders, disabled  */
 
-  --c-accent:     #e2b714;            /* amber — the one accent */
-  --c-accent-sub: rgba(226, 183, 20, 0.08); /* faint accent fill  */
+  --c-accent:     #e2b714;            /* amber — the single accent */
+  --c-accent-sub: rgba(226, 183, 20, 0.1); /* faint accent fill  */
 
-  /* --- Liquid Glass Material Tokens --- */
-  --glass-bg:           rgba(25, 26, 27, 0.65);
-  --glass-bg-hover:     rgba(34, 36, 38, 0.85);
-  --glass-border:       rgba(255, 255, 255, 0.08);
-  --glass-border-light: rgba(255, 255, 255, 0.14);
-  --glass-highlight:    rgba(255, 255, 255, 0.04);
-  --glass-blur:         blur(16px);
-  --glass-shadow:       0 8px 32px rgba(0, 0, 0, 0.35);
-  --glass-inset-light:  inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  /* --- Liquid Glass Tiers --- */
+  /* Tier 1: Chrome (Header) — Thinnest glass */
+  --glass-chrome-bg:         rgba(18, 19, 22, 0.72);
+  --glass-chrome-blur:       blur(20px) saturate(160%);
 
-  /* Functional colors — reserved for typing feedback only */
+  /* Tier 2: Functional Surfaces (Main panels / Results / Stats) */
+  --glass-surface-bg:        rgba(20, 21, 24, 0.6);
+  --glass-surface-blur:      blur(30px) saturate(140%) brightness(1.04);
+
+  /* Tier 3: Elevated elements */
+  --glass-elevated-bg:       rgba(26, 28, 32, 0.78);
+  --glass-elevated-blur:     blur(40px) saturate(150%);
+
+  /* Specular Edge Highlights & Inner Refraction */
+  --glass-border:            rgba(255, 255, 255, 0.08);
+  --glass-specular-top:      rgba(255, 255, 255, 0.14);
+  --glass-specular-inset:    inset 0 1px 0 rgba(255, 255, 255, 0.12), inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  --glass-shadow:            0 16px 40px rgba(0, 0, 0, 0.38), 0 2px 8px rgba(0, 0, 0, 0.24);
+
+  /* Functional colors — typing feedback only */
   --c-correct:   #4ade80;
   --c-incorrect: #f87171;
   --c-pending:   var(--c-text-3);
@@ -68,7 +76,7 @@
   --s-20: 5rem;      /* 80px */
 
   /* --- Layout --- */
-  --content-w: 960px;  /* app shell width */
+  --content-w: 960px;
 
   /* --- Radii --- */
   --r-sm: 4px;
@@ -81,7 +89,8 @@
 }
 
 /* ============================================================
-   Base
+   Base & Atmospheric Background
+   Quiet, non-animating ambient luminance field for glass refraction
    ============================================================ */
 html {
   font-size: 16px;
@@ -93,8 +102,11 @@ body {
   font-family: var(--f-ui);
   font-size: var(--t-base);
   background-color: var(--c-bg);
-  background-image: 
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(226, 183, 20, 0.05), transparent 70%);
+  background-image:
+    radial-gradient(ellipse 90% 60% at 50% -10%, rgba(226, 183, 20, 0.05), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 15% 55%, rgba(60, 70, 95, 0.09), transparent 70%),
+    radial-gradient(ellipse 60% 50% at 85% 75%, rgba(35, 40, 55, 0.08), transparent 70%);
+  background-attachment: fixed;
   color: var(--c-text-1);
   line-height: 1.6;
   min-height: 100dvh;
@@ -124,6 +136,19 @@ body {
 ::-webkit-scrollbar        { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track  { background: transparent; }
 ::-webkit-scrollbar-thumb  { background: var(--c-border); border-radius: 99px; }
+
+/* ============================================================
+   Fallback for browsers without backdrop-filter support
+   ============================================================ */
+@supports not (backdrop-filter: blur(1px)) {
+  .header,
+  .results,
+  .stats-history {
+    background-color: #16171a !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
 
 /* ============================================================
    Reduced motion
