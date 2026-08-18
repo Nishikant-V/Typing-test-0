@@ -8,26 +8,28 @@ A minimal, focused typing speed test built with React, TypeScript, and Vite.
 - Vite 8
 - Plain CSS (no UI framework, no Tailwind)
 
-## Features (so far)
+## Features
 
-- Random passage selection from a curated set
-- Real-time character-by-character comparison (correct / incorrect / current / untyped)
-- Backspace support with correct state recalculation
-- Test lifecycle: idle → running → finished
-- Clean `useReducer`-based typing engine with pure utility functions
+- **Random Passage Selection**: Curated typing passages.
+- **Real-Time Character Feedback**: State-based character highlighting (`correct`, `incorrect`, `current`, `untyped`).
+- **Timestamp-Based Timer**: Accurate 15s, 30s, and 60s mode options.
+- **Live Metrics**: Real-time WPM, Accuracy (%), Correct/Incorrect character counts, and countdown timer.
+- **Backspace & Error Handling**: Recalculates state cleanly without artificial error inflation.
+- **Test Lifecycle**: `idle` → `running` → `finished`.
+- **Clean Architecture**: Custom hooks (`useTyping`), pure utilities (`calculateMetrics`, `buildDisplay`), and explicit TypeScript types.
 
-## Project structure
+## Project Structure
 
 ```
 src/
 ├── components/    # TypingArea, Header
 ├── hooks/         # useTyping
-├── types/         # CharState, TestState, CharDisplay
-├── utils/         # buildDisplay (pure fn)
+├── types/         # CharState, TestState, TestDuration, TypingMetrics
+├── utils/         # buildDisplay, calculateMetrics
 └── data/          # passages + getRandomPassage
 ```
 
-## Getting started
+## Getting Started
 
 ```bash
 npm install
