@@ -37,7 +37,7 @@
   --glass-surface-shadow:    0 12px 32px rgba(0, 0, 0, 0.35);
 
   /* Tier 3: Summary Cards & Elevated Surfaces */
-  --glass-card-bg:           rgba(22, 24, 28, 0.24);
+  --glass-card-bg:           rgba(22, 24, 28, 0.12);
   --glass-card-shadow:       0 6px 20px rgba(0, 0, 0, 0.25);
 
   /* Internal Refraction Gradient */
@@ -92,7 +92,7 @@
 
 /* ============================================================
    Base & Atmospheric Background
-   Enhanced 1.5x ambient luminance field spanning the full scroll height
+   Full-page ambient luminance field spanning the full scroll height
    ============================================================ */
 html {
   font-size: 16px;
@@ -105,7 +105,7 @@ body {
   font-size: var(--t-base);
   background-color: var(--c-bg);
   background-image:
-    radial-gradient(ellipse 90% 50% at 50% -10%, rgba(226, 183, 20, 0.24), transparent 70%),
+    radial-gradient(ellipse 120% 70% at 50% -20%, rgba(226, 183, 20, 0.15), transparent 75%),
     radial-gradient(ellipse 70% 50% at 15% 35%, rgba(75, 90, 135, 0.33), transparent 70%),
     radial-gradient(ellipse 75% 55% at 85% 65%, rgba(65, 75, 110, 0.30), transparent 70%),
     radial-gradient(ellipse 80% 60% at 20% 90%, rgba(55, 65, 95, 0.27), transparent 70%);
