@@ -1,32 +1,41 @@
-# React + TypeScript + Vite
+# TypeSpeed
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A minimal, focused typing speed test built with React, TypeScript, and Vite.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React 19 + TypeScript
+- Vite 8
+- Plain CSS (no UI framework, no Tailwind)
 
-## React Compiler
+## Features (so far)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Random passage selection from a curated set
+- Real-time character-by-character comparison (correct / incorrect / current / untyped)
+- Backspace support with correct state recalculation
+- Test lifecycle: idle → running → finished
+- Clean `useReducer`-based typing engine with pure utility functions
 
-## Expanding the Oxlint configuration
+## Project structure
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```
+src/
+├── components/    # TypingArea, Header
+├── hooks/         # useTyping
+├── types/         # CharState, TestState, CharDisplay
+├── utils/         # buildDisplay (pure fn)
+└── data/          # passages + getRandomPassage
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Getting started
+
+```bash
+npm install
+npm run dev
+```
+
+## Build
+
+```bash
+npm run build
+```
