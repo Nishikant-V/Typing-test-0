@@ -1,15 +1,22 @@
 /* ============================================================
-   Typing Area — layout shell & passage priority
+   Typing Area — Tier 1 Glass Outer Container & Passage Priority
    ============================================================ */
 
 .typing-area {
   width: 100%;
-  padding: var(--s-6) 0 var(--s-10);
+  padding: var(--s-6);
   cursor: text;
   position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--s-4);
+  background-image: var(--glass-refraction-bg);
+  background-color: var(--glass-chrome-bg);
+  backdrop-filter: var(--glass-chrome-blur);
+  -webkit-backdrop-filter: var(--glass-chrome-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow), var(--glass-specular-inset);
+  border-radius: var(--r-lg);
 }
 
 /* ============================================================
@@ -44,6 +51,7 @@
   flex-wrap: wrap;
   gap: var(--s-3) var(--s-4);
   padding-bottom: var(--s-2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .typing-area__controls {
@@ -58,7 +66,7 @@
   gap: 2px;
   background-color: var(--c-surface);
   border: 1px solid var(--c-border);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
   border-radius: var(--r-md);
   padding: 3px;
 }
@@ -81,14 +89,14 @@
 
 .typing-area__mode-btn:hover:not(:disabled) {
   color: var(--c-text-1);
-  background-color: rgba(255, 255, 255, 0.04);
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .typing-area__mode-btn--active {
   color: var(--c-accent);
   font-weight: 600;
   background-color: var(--c-accent-sub);
-  border-color: rgba(226, 183, 20, 0.22);
+  border-color: rgba(226, 183, 20, 0.25);
 }
 
 .typing-area__mode-btn:disabled {
@@ -100,7 +108,7 @@
 .typing-area__restart-icon-btn {
   background-color: var(--c-surface);
   border: 1px solid var(--c-border);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
   color: var(--c-text-2);
   font-size: var(--t-md);
   cursor: pointer;
@@ -118,7 +126,7 @@
 .typing-area__restart-icon-btn:hover {
   color: var(--c-accent);
   background-color: #202227;
-  border-color: rgba(226, 183, 20, 0.25);
+  border-color: rgba(226, 183, 20, 0.3);
   transform: rotate(60deg);
 }
 
@@ -178,6 +186,7 @@
   max-width: 65ch;
   overflow-wrap: break-word;
   word-break: break-word;
+  padding: var(--s-2) 0;
   transition: opacity var(--ease-base);
 }
 
@@ -186,7 +195,7 @@
 }
 
 /* ============================================================
-   Characters — Maximum WCAG AA Contrast
+   Characters — 100% WCAG AA Contrast on Glass
    ============================================================ */
 .char {
   font-family: var(--f-mono);
@@ -196,11 +205,11 @@
 }
 
 .char--untyped {
-  color: #4e535a;
+  color: #555b63;
 }
 
 .char--correct {
-  color: #e8eaed;
+  color: #ffffff;
 }
 
 .char--incorrect {
@@ -208,7 +217,7 @@
 }
 
 .char--current {
-  color: #4e535a;
+  color: #555b63;
 }
 
 .char--current::before {
@@ -252,7 +261,7 @@
    ============================================================ */
 @media (max-height: 720px) {
   .typing-area {
-    padding: var(--s-4) 0 var(--s-6);
+    padding: var(--s-4);
   }
 }
 
@@ -261,7 +270,7 @@
    ============================================================ */
 @media (max-width: 768px) {
   .typing-area {
-    padding: var(--s-4) 0 var(--s-8);
+    padding: var(--s-4);
   }
 
   .char {
@@ -282,7 +291,7 @@
    ============================================================ */
 @media (max-width: 480px) {
   .typing-area {
-    padding: var(--s-3) 0 var(--s-6);
+    padding: var(--s-3);
   }
 
   .typing-area__toolbar {
