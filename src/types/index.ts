@@ -23,3 +23,27 @@ export interface TypingMetrics {
   timeRemaining: number;
   elapsedSeconds: number;
 }
+
+/** Stored result of a completed typing test session. */
+export interface StoredTestResult {
+  id: string;
+  timestamp: number;
+  duration: TestDuration;
+  wpm: number;
+  rawWpm: number;
+  accuracy: number;
+  correctChars: number;
+  incorrectChars: number;
+  elapsedSeconds: number;
+}
+
+/** Aggregated personal statistics derived from test history. */
+export interface UserStatistics {
+  testsCompleted: number;
+  personalBestWpm: number;
+  averageWpm: number;
+  averageAccuracy: number;
+  best15sWpm: number;
+  best30sWpm: number;
+  best60sWpm: number;
+}

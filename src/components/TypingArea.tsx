@@ -1,7 +1,8 @@
 import React, { useRef, useState, useCallback, useEffect, memo } from 'react';
 import { useTyping } from '../hooks/useTyping';
 import { ResultsDisplay } from './ResultsDisplay';
-import type { CharDisplay, TestDuration } from '../types';
+import { saveResult, checkIsPersonalBest } from '../utils';
+import type { CharDisplay, TestDuration, StoredTestResult } from '../types';
 import './TypingArea.css';
 
 // ---------------------------------------------------------------------------
@@ -32,9 +33,17 @@ Char.displayName = 'Char';
 // TypingArea
 // ---------------------------------------------------------------------------
 
+interface TypingAreaProps {
+  history: StoredTestResult[];
+  onResultSaved: () => void;
+}
+
 const DURATIONS: readonly TestDuration[] = [15, 30, 60];
 
-const TypingArea: React.FC = () => {
+export const TypingArea: React.FC<TypingAreaProps> = ({
+  history,
+  onResultSaved,
+}) => {
   const {
     display,
     testState,
@@ -47,6 +56,11 @@ const TypingArea: React.FC = () => {
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [isFocused, setIsFocused] = useState(false);
+  const hasSavedRef = useRef<boolean>(false);
+  const [pbStatus, setPbStatus] = useState<{ isOverallPb: boolean; isModePb: boolean }>({
+    isOverallPb: false,
+    isModePb: false,
+  });
 
   const focusInput = useCallback(() => {
     inputRef.current?.focus();
@@ -58,8 +72,36 @@ const TypingArea: React.FC = () => {
   }, [reset, focusInput]);
 
   /**
-   * Extends the hook's keydown handler with app-level concern:
-   * pressing Enter when test is finished restarts test and focuses input.
+   * Saves completed test result to localStorage EXACTLY ONCE per test.
+   */
+  useEffect(() => {
+    if (testState === 'finished' && !hasSavedRef.current) {
+      hasSavedRef.current = true;
+
+      // Evaluate Personal Best status against existing history
+      const pb = checkIsPersonalBest(metrics.wpm, duration, history);
+      setPbStatus(pb);
+
+      // Persist to storage
+      saveResult({
+        duration,
+        wpm: metrics.wpm,
+        rawWpm: metrics.rawWpm,
+        accuracy: metrics.accuracy,
+        correctChars: metrics.correctChars,
+        incorrectChars: metrics.incorrectChars,
+        elapsedSeconds: metrics.elapsedSeconds,
+      });
+
+      onResultSaved();
+    } else if (testState === 'idle') {
+      hasSavedRef.current = false;
+      setPbStatus({ isOverallPb: false, isModePb: false });
+    }
+  }, [testState, metrics, duration, history, onResultSaved]);
+
+  /**
+   * Keydown handler for hidden input.
    */
   const handleInputKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -74,8 +116,7 @@ const TypingArea: React.FC = () => {
   );
 
   /**
-   * Global keyboard shortcut: pressing Enter when test is finished
-   * restarts the test and focuses the input even if focus was blurred.
+   * Global keyboard shortcut: Enter restarts test when finished.
    */
   useEffect(() => {
     if (testState !== 'finished') return;
@@ -119,7 +160,7 @@ const TypingArea: React.FC = () => {
         spellCheck={false}
       />
 
-      {/* Toolbar — Controls & Live Metrics (shown during idle / running) */}
+      {/* Toolbar — Controls & Live Metrics */}
       <div className="typing-area__toolbar" onClick={(e) => e.stopPropagation()}>
         <div className="typing-area__controls">
           <div className="typing-area__modes" role="group" aria-label="Test duration selector">
@@ -188,6 +229,8 @@ const TypingArea: React.FC = () => {
         <ResultsDisplay
           metrics={metrics}
           duration={duration}
+          isOverallPb={pbStatus.isOverallPb}
+          isModePb={pbStatus.isModePb}
           onRestart={handleRestart}
         />
       )}
