@@ -1,5 +1,5 @@
 /* ============================================================
-   Results Display
+   Results Display — Liquid Glass Material
    ============================================================ */
 
 .results {
@@ -7,7 +7,13 @@
   display: flex;
   flex-direction: column;
   gap: var(--s-5);
-  padding: var(--s-4) 0;
+  padding: var(--s-6);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow), var(--glass-inset-light);
+  border-radius: var(--r-lg);
   animation: fade-in var(--ease-base) both;
 }
 
@@ -43,6 +49,7 @@
   line-height: 1;
   color: var(--c-accent);
   letter-spacing: -0.03em;
+  text-shadow: 0 0 24px rgba(226, 183, 20, 0.2);
 }
 
 .results__wpm-label {
@@ -60,8 +67,10 @@
   font-size: var(--t-xs);
   font-weight: 600;
   color: var(--c-accent);
-  background-color: var(--c-accent-sub);
-  border: 1px solid var(--c-accent);
+  background: rgba(226, 183, 20, 0.12);
+  border: 1px solid rgba(226, 183, 20, 0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-radius: var(--r-sm);
   padding: 3px 8px;
   letter-spacing: 0.04em;
@@ -75,8 +84,8 @@
   grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
   gap: var(--s-4) var(--s-5);
   padding: var(--s-4) 0;
-  border-top: 1px solid var(--c-border);
-  border-bottom: 1px solid var(--c-border);
+  border-top: 1px solid var(--glass-border);
+  border-bottom: 1px solid var(--glass-border);
 }
 
 .results__stat {
@@ -126,22 +135,24 @@
   font-weight: 500;
   color: var(--c-bg);
   background-color: var(--c-accent);
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--r-sm);
   padding: var(--s-2) var(--s-4);
   min-height: 40px;
   cursor: pointer;
-  transition: opacity var(--ease-fast), transform var(--ease-fast);
+  box-shadow: 0 4px 16px rgba(226, 183, 20, 0.25);
+  transition: opacity var(--ease-fast), transform var(--ease-fast), box-shadow var(--ease-fast);
 }
 
 .results__restart-btn:hover {
-  opacity: 0.9;
+  opacity: 0.92;
+  box-shadow: 0 6px 20px rgba(226, 183, 20, 0.35);
 }
 
 .results__kbd {
   font-family: var(--f-mono);
   font-size: var(--t-xs);
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.25);
   color: var(--c-bg);
   padding: 2px 6px;
   border-radius: var(--r-sm);
@@ -152,6 +163,7 @@
 @media (max-width: 480px) {
   .results {
     gap: var(--s-4);
+    padding: var(--s-4);
   }
 
   .results__hero {

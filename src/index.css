@@ -26,6 +26,16 @@
   --c-accent:     #e2b714;            /* amber — the one accent */
   --c-accent-sub: rgba(226, 183, 20, 0.08); /* faint accent fill  */
 
+  /* --- Liquid Glass Material Tokens --- */
+  --glass-bg:           rgba(25, 26, 27, 0.65);
+  --glass-bg-hover:     rgba(34, 36, 38, 0.85);
+  --glass-border:       rgba(255, 255, 255, 0.08);
+  --glass-border-light: rgba(255, 255, 255, 0.14);
+  --glass-highlight:    rgba(255, 255, 255, 0.04);
+  --glass-blur:         blur(16px);
+  --glass-shadow:       0 8px 32px rgba(0, 0, 0, 0.35);
+  --glass-inset-light:  inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
   /* Functional colors — reserved for typing feedback only */
   --c-correct:   #4ade80;
   --c-incorrect: #f87171;
@@ -61,8 +71,9 @@
   --content-w: 960px;  /* app shell width */
 
   /* --- Radii --- */
-  --r-sm: 3px;
-  --r-md: 6px;
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 12px;
 
   /* --- Transitions --- */
   --ease-fast: 120ms ease;
@@ -82,6 +93,8 @@ body {
   font-family: var(--f-ui);
   font-size: var(--t-base);
   background-color: var(--c-bg);
+  background-image: 
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(226, 183, 20, 0.05), transparent 70%);
   color: var(--c-text-1);
   line-height: 1.6;
   min-height: 100dvh;
