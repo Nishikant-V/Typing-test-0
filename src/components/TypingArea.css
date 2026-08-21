@@ -4,11 +4,13 @@
 
 .typing-area {
   width: 100%;
+  min-height: 250px;
   padding: var(--s-6);
   cursor: text;
   position: relative;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   gap: var(--s-4);
   border: 1px solid transparent;
   background:
@@ -60,52 +62,87 @@
 .typing-area__controls {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: var(--s-3);
 }
 
-/* Segmented Control Pill Container (Apple Sequoia Style) */
+/* Text Modifiers (Punctuation & Numbers) & Modes Pill Container (Apple Sequoia Style) */
+.typing-area__toggles,
 .typing-area__modes {
   display: inline-flex;
+  align-items: center;
   gap: 2px;
-  background: rgba(0, 0, 0, 0.15);
+  background: rgba(0, 0, 0, 0.18);
   border: 1px solid var(--c-border);
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
   border-radius: 99px;
   padding: 3px;
+  position: relative;
 }
 
+[data-theme="light"] .typing-area__toggles,
 [data-theme="light"] .typing-area__modes {
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
+.typing-area__toggle-btn,
 .typing-area__mode-btn {
   font-family: var(--f-ui);
   font-size: var(--t-xs);
+  letter-spacing: -0.01em;
+  font-weight: 500;
   color: var(--c-text-2);
   background: transparent;
   border: 1px solid transparent;
   border-radius: 99px;
   padding: var(--s-1) var(--s-3);
-  min-height: 30px;
+  min-height: 28px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: color var(--ease-fast), background-color var(--ease-fast), box-shadow var(--ease-fast);
+  user-select: none;
+  transition:
+    color var(--ease-fast),
+    background-color var(--ease-fast),
+    box-shadow var(--ease-fast),
+    border-color var(--ease-fast),
+    transform 100ms ease;
 }
 
+.typing-area__toggle-btn:hover:not(:disabled),
 .typing-area__mode-btn:hover:not(:disabled) {
   color: var(--c-text-1);
 }
 
+.typing-area__toggle-btn:active:not(:disabled),
+.typing-area__mode-btn:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.typing-area__toggle-btn--active,
 .typing-area__mode-btn--active {
   color: var(--c-accent);
   font-weight: 600;
   background-color: var(--c-surface);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-  border-color: rgba(200, 176, 130, 0.25);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  border-color: rgba(200, 176, 130, 0.28);
 }
 
+[data-theme="light"] .typing-area__toggle-btn--active,
+[data-theme="light"] .typing-area__mode-btn--active {
+  background-color: #ffffff;
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  border-color: rgba(143, 112, 54, 0.28);
+}
+
+.typing-area__toggle-btn:disabled,
 .typing-area__mode-btn:disabled {
   opacity: 0.35;
   cursor: not-allowed;
@@ -135,6 +172,10 @@
   background-color: var(--c-surface);
   border-color: var(--c-accent);
   transform: rotate(60deg);
+}
+
+.typing-area__restart-icon-btn:active {
+  transform: rotate(60deg) scale(0.94);
 }
 
 /* Live Metrics display */
@@ -186,20 +227,32 @@
 }
 
 /* ============================================================
-   Passage container — Centered 68ch Measure inside Wider Canvas
+   Passage Viewport — Fixed Height 3-Line Progressive Window
    ============================================================ */
+.typing-area__viewport {
+  height: calc(1.85 * 3 * var(--t-lg)); /* Exactly 3 lines = 111px */
+  max-width: 68ch;
+  width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+  user-select: none;
+  scroll-behavior: smooth;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
+}
+
 .typing-area__passage {
   line-height: 1.85;
-  max-width: 68ch;
-  margin: 0 auto;
   width: 100%;
   overflow-wrap: break-word;
   word-break: break-word;
-  padding: var(--s-4) 0;
+  margin: 0 auto;
+  padding: 0;
   transition: opacity var(--ease-base);
 }
 
-.typing-area--blurred.typing-area--running .typing-area__passage {
+.typing-area--blurred.typing-area--running .typing-area__viewport {
   opacity: 0.35;
 }
 
@@ -281,14 +334,16 @@
 @media (max-width: 768px) {
   .typing-area {
     padding: var(--s-4);
+    min-height: 230px;
+  }
+
+  .typing-area__viewport {
+    height: calc(1.85 * 3 * var(--t-md)); /* ~94px */
+    max-width: 100%;
   }
 
   .char {
     font-size: var(--t-md);
-  }
-
-  .typing-area__passage {
-    max-width: 100%;
   }
 
   .typing-area__metrics {
@@ -302,19 +357,24 @@
 @media (max-width: 480px) {
   .typing-area {
     padding: var(--s-3);
+    min-height: 230px;
   }
 
   .typing-area__toolbar {
-    flex-direction: row;
-    align-items: center;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--s-3);
+  }
+
+  .typing-area__controls {
     justify-content: space-between;
     gap: var(--s-2);
   }
 
+  .typing-area__toggle-btn,
   .typing-area__mode-btn {
     min-height: 36px;
-    min-width: 40px;
-    padding: var(--s-1) var(--s-3);
+    padding: var(--s-1) var(--s-2);
   }
 
   .typing-area__restart-icon-btn {
@@ -323,6 +383,7 @@
   }
 
   .typing-area__metrics {
+    justify-content: flex-end;
     gap: var(--s-3);
   }
 
@@ -336,6 +397,10 @@
 
   .typing-area__metric-val {
     font-size: var(--t-sm);
+  }
+
+  .typing-area__viewport {
+    height: calc(1.75 * 3 * 1rem); /* ~84px */
   }
 
   .char {
