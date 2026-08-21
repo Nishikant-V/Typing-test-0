@@ -257,7 +257,40 @@
 }
 
 /* ============================================================
-   Characters — Monospace & High Contrast
+   Word-Level Progress Feedback (Apple-Style)
+   ============================================================ */
+
+.word {
+  display: inline;
+  white-space: pre;
+  border-radius: var(--r-sm);
+  transition: opacity var(--ease-base), background-color var(--ease-fast), box-shadow var(--ease-fast);
+}
+
+/* Completed word: gentle 45% muted fade out to signal "done" through de-emphasis */
+.word--completed {
+  opacity: 0.45;
+}
+
+.word--completed .char--correct {
+  color: var(--c-text-1);
+}
+
+/* Active word: full opacity with subtle accent underline and faint background tint */
+.word--active {
+  opacity: 1;
+  background-color: var(--c-accent-sub);
+  box-shadow: 0 1.5px 0 0 var(--c-accent);
+  border-radius: 2px;
+}
+
+/* Upcoming word: stays at current muted gray as-is */
+.word--upcoming {
+  opacity: 1;
+}
+
+/* ============================================================
+   Characters — Monospace & Error Indicators
    ============================================================ */
 .char {
   font-family: var(--f-mono);
@@ -274,8 +307,10 @@
   color: var(--c-text-1);
 }
 
+/* Red error indicator for incorrect characters */
 .char--incorrect {
-  color: var(--c-incorrect);
+  color: var(--c-incorrect) !important;
+  opacity: 1 !important;
 }
 
 .char--current {

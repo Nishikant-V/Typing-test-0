@@ -1,6 +1,9 @@
 /** The display state of a single character in the typing passage. */
 export type CharState = 'untyped' | 'correct' | 'incorrect' | 'current';
 
+/** The status of a word in the passage display. */
+export type WordStatus = 'completed' | 'active' | 'upcoming';
+
 /** The lifecycle state of a typing test session. */
 export type TestState = 'idle' | 'running' | 'finished';
 
@@ -11,6 +14,13 @@ export type TestDuration = 15 | 30 | 60;
 export interface CharDisplay {
   char: string;
   state: CharState;
+}
+
+/** Display data for a single word composed of characters. */
+export interface WordDisplay {
+  id: number;
+  status: WordStatus;
+  chars: CharDisplay[];
 }
 
 /** Real-time metrics calculated for the current typing test session. */

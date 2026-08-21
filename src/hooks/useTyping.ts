@@ -1,7 +1,7 @@
 import { useReducer, useCallback, useEffect, useState } from 'react';
 import type { KeyboardEvent } from 'react';
-import type { CharDisplay, TestDuration, TestState, TypingMetrics } from '../types';
-import { buildDisplay, calculateMetrics } from '../utils/typing';
+import type { CharDisplay, WordDisplay, TestDuration, TestState, TypingMetrics } from '../types';
+import { buildDisplay, buildWordDisplay, calculateMetrics } from '../utils/typing';
 import { getInitialPassage, generateWords } from '../data/passages';
 
 // ---------------------------------------------------------------------------
@@ -213,6 +213,7 @@ function makeInitialState(): State {
 // ---------------------------------------------------------------------------
 
 export interface UseTypingReturn {
+  words: WordDisplay[];
   display: CharDisplay[];
   testState: TestState;
   duration: TestDuration;
@@ -292,6 +293,7 @@ export function useTyping(): UseTypingReturn {
   }, []);
 
   const display = buildDisplay(state.passage, state.typed, state.testState === 'finished');
+  const words = buildWordDisplay(state.passage, state.typed, state.testState === 'finished');
   const metrics = calculateMetrics(
     state.passage,
     state.typed,
@@ -302,6 +304,7 @@ export function useTyping(): UseTypingReturn {
   );
 
   return {
+    words,
     display,
     testState: state.testState,
     duration: state.duration,

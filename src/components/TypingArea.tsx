@@ -2,7 +2,7 @@ import React, { useRef, useState, useCallback, useEffect, memo } from 'react';
 import { useTyping } from '../hooks/useTyping';
 import { ResultsDisplay } from './ResultsDisplay';
 import { saveResult, checkIsPersonalBest } from '../utils';
-import type { CharDisplay, TestDuration, StoredTestResult } from '../types';
+import type { CharDisplay, WordDisplay, TestDuration, StoredTestResult } from '../types';
 import './TypingArea.css';
 
 // ---------------------------------------------------------------------------
@@ -30,6 +30,26 @@ const Char = memo<CharProps>(({ display }) => {
 Char.displayName = 'Char';
 
 // ---------------------------------------------------------------------------
+// Word — word-level progress container (Apple-style progressive feedback)
+// ---------------------------------------------------------------------------
+
+interface WordProps {
+  word: WordDisplay;
+}
+
+const Word = memo<WordProps>(({ word }) => {
+  return (
+    <span className={`word word--${word.status}`}>
+      {word.chars.map((charDisplay, i) => (
+        <Char key={i} display={charDisplay} />
+      ))}
+    </span>
+  );
+});
+
+Word.displayName = 'Word';
+
+// ---------------------------------------------------------------------------
 // TypingArea
 // ---------------------------------------------------------------------------
 
@@ -45,7 +65,7 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
   onResultSaved,
 }) => {
   const {
-    display,
+    words,
     testState,
     duration,
     metrics,
@@ -101,7 +121,7 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
     } else {
       viewportRef.current.scrollTo({ top: 0, behavior: 'smooth' });
     }
-  }, [display, testState]);
+  }, [words, testState]);
 
   /**
    * Saves completed test result to localStorage EXACTLY ONCE per test.
@@ -290,8 +310,8 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
           aria-hidden="true"
         >
           <div className="typing-area__passage">
-            {display.map((charDisplay, i) => (
-              <Char key={i} display={charDisplay} />
+            {words.map((word) => (
+              <Word key={word.id} word={word} />
             ))}
           </div>
         </div>

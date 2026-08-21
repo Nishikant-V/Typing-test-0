@@ -1,4 +1,4 @@
-import type { CharDisplay, CharState, TypingMetrics } from '../types';
+import type { CharDisplay, CharState, WordDisplay, WordStatus, TypingMetrics } from '../types';
 
 /**
  * Pure function — derives the display state of every character in a passage
@@ -27,6 +27,55 @@ export function buildDisplay(passage: string, typed: string, isFinished = false)
 
     return { char, state };
   });
+}
+
+/**
+ * Pure function — groups characters into WordDisplay objects with word-level statuses:
+ * - 'completed': all characters in the word have been typed (fades out gracefully)
+ * - 'active': currently being typed (subtle accent tint / underline)
+ * - 'upcoming': not yet reached (standard untyped gray)
+ */
+export function buildWordDisplay(passage: string, typed: string, isFinished = false): WordDisplay[] {
+  const chars = buildDisplay(passage, typed, isFinished);
+  const words: WordDisplay[] = [];
+
+  let currentWordChars: CharDisplay[] = [];
+  let wordStartIndex = 0;
+  let wordId = 0;
+
+  for (let i = 0; i < chars.length; i++) {
+    const charDisplay = chars[i];
+    currentWordChars.push(charDisplay);
+
+    const isSpace = charDisplay.char === ' ';
+    const isLastChar = i === chars.length - 1;
+
+    if (isSpace || isLastChar) {
+      const wordEndIndex = i;
+      let status: WordStatus;
+
+      if (isFinished) {
+        status = typed.length > wordStartIndex ? 'completed' : 'upcoming';
+      } else if (typed.length > wordEndIndex) {
+        status = 'completed';
+      } else if (typed.length >= wordStartIndex && typed.length <= wordEndIndex) {
+        status = 'active';
+      } else {
+        status = 'upcoming';
+      }
+
+      words.push({
+        id: wordId++,
+        status,
+        chars: currentWordChars,
+      });
+
+      currentWordChars = [];
+      wordStartIndex = i + 1;
+    }
+  }
+
+  return words;
 }
 
 /**
