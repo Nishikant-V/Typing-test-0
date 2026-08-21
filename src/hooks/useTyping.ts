@@ -2,7 +2,16 @@ import { useReducer, useCallback, useEffect, useState } from 'react';
 import type { KeyboardEvent } from 'react';
 import type { CharDisplay, TestDuration, TestState, TypingMetrics } from '../types';
 import { buildDisplay, calculateMetrics } from '../utils/typing';
-import { getRandomPassage } from '../data/passages';
+import { getInitialPassage, generateWords } from '../data/passages';
+
+// ---------------------------------------------------------------------------
+// Streaming constants
+// ---------------------------------------------------------------------------
+
+/** When fewer than 120 characters (~20-25 words) remain, append more text */
+const STREAM_REPLENISH_THRESHOLD = 120;
+/** Number of additional words to append per replenishment */
+const STREAM_CHUNK_WORDS = 30;
 
 // ---------------------------------------------------------------------------
 // Reducer state
@@ -13,6 +22,8 @@ interface State {
   typed: string;
   testState: TestState;
   duration: TestDuration;
+  hasPunctuation: boolean;
+  hasNumbers: boolean;
   startTimeMs: number | null;
   endTimeMs: number | null;
 }
@@ -26,6 +37,10 @@ type Action =
   | { type: 'BACKSPACE' }
   | { type: 'TICK'; nowMs: number }
   | { type: 'SET_DURATION'; duration: TestDuration }
+  | { type: 'TOGGLE_PUNCTUATION' }
+  | { type: 'TOGGLE_NUMBERS' }
+  | { type: 'SET_PUNCTUATION'; enabled: boolean }
+  | { type: 'SET_NUMBERS'; enabled: boolean }
   | { type: 'RESET'; duration?: TestDuration };
 
 // ---------------------------------------------------------------------------
@@ -36,22 +51,28 @@ function reducer(state: State, action: Action): State {
   switch (action.type) {
     case 'TYPE': {
       if (state.testState === 'finished') return state;
-      if (state.typed.length >= state.passage.length) return state;
 
       const newTyped = state.typed + action.char;
-      const isComplete = newTyped.length === state.passage.length;
       const isFirstChar = state.testState === 'idle';
       const startTimeMs = isFirstChar ? action.nowMs : state.startTimeMs;
 
-      const testState: TestState = isComplete ? 'finished' : 'running';
-      const endTimeMs = isComplete ? action.nowMs : null;
+      // Check if we need to stream/append additional words seamlessly
+      let passage = state.passage;
+      const remainingChars = passage.length - newTyped.length;
+      if (remainingChars < STREAM_REPLENISH_THRESHOLD) {
+        const extraChunk = generateWords(STREAM_CHUNK_WORDS, {
+          punctuation: state.hasPunctuation,
+          numbers: state.hasNumbers,
+        });
+        passage = passage + ' ' + extraChunk;
+      }
 
       return {
         ...state,
+        passage,
         typed: newTyped,
-        testState,
+        testState: 'running',
         startTimeMs,
-        endTimeMs,
       };
     }
 
@@ -83,14 +104,87 @@ function reducer(state: State, action: Action): State {
         testState: 'idle',
         startTimeMs: null,
         endTimeMs: null,
-        passage: getRandomPassage(),
+        passage: getInitialPassage(action.duration, {
+          punctuation: state.hasPunctuation,
+          numbers: state.hasNumbers,
+        }),
+      };
+    }
+
+    case 'TOGGLE_PUNCTUATION': {
+      if (state.testState === 'running') return state;
+      const nextPunctuation = !state.hasPunctuation;
+      return {
+        ...state,
+        hasPunctuation: nextPunctuation,
+        passage: getInitialPassage(state.duration, {
+          punctuation: nextPunctuation,
+          numbers: state.hasNumbers,
+        }),
+        typed: '',
+        testState: 'idle',
+        startTimeMs: null,
+        endTimeMs: null,
+      };
+    }
+
+    case 'TOGGLE_NUMBERS': {
+      if (state.testState === 'running') return state;
+      const nextNumbers = !state.hasNumbers;
+      return {
+        ...state,
+        hasNumbers: nextNumbers,
+        passage: getInitialPassage(state.duration, {
+          punctuation: state.hasPunctuation,
+          numbers: nextNumbers,
+        }),
+        typed: '',
+        testState: 'idle',
+        startTimeMs: null,
+        endTimeMs: null,
+      };
+    }
+
+    case 'SET_PUNCTUATION': {
+      if (state.testState === 'running' || state.hasPunctuation === action.enabled) return state;
+      return {
+        ...state,
+        hasPunctuation: action.enabled,
+        passage: getInitialPassage(state.duration, {
+          punctuation: action.enabled,
+          numbers: state.hasNumbers,
+        }),
+        typed: '',
+        testState: 'idle',
+        startTimeMs: null,
+        endTimeMs: null,
+      };
+    }
+
+    case 'SET_NUMBERS': {
+      if (state.testState === 'running' || state.hasNumbers === action.enabled) return state;
+      return {
+        ...state,
+        hasNumbers: action.enabled,
+        passage: getInitialPassage(state.duration, {
+          punctuation: state.hasPunctuation,
+          numbers: action.enabled,
+        }),
+        typed: '',
+        testState: 'idle',
+        startTimeMs: null,
+        endTimeMs: null,
       };
     }
 
     case 'RESET': {
       const nextDuration = action.duration ?? state.duration;
       return {
-        passage: getRandomPassage(),
+        ...state,
+        passage: getInitialPassage(nextDuration, {
+          punctuation: state.hasPunctuation,
+          numbers: state.hasNumbers,
+        }),
         typed: '',
         testState: 'idle',
         duration: nextDuration,
@@ -103,10 +197,12 @@ function reducer(state: State, action: Action): State {
 
 function makeInitialState(): State {
   return {
-    passage: getRandomPassage(),
+    passage: getInitialPassage(30, { punctuation: false, numbers: false }),
     typed: '',
     testState: 'idle',
     duration: 30,
+    hasPunctuation: false,
+    hasNumbers: false,
     startTimeMs: null,
     endTimeMs: null,
   };
@@ -121,8 +217,14 @@ export interface UseTypingReturn {
   testState: TestState;
   duration: TestDuration;
   metrics: TypingMetrics;
+  hasPunctuation: boolean;
+  hasNumbers: boolean;
   handleKeyDown: (e: KeyboardEvent) => void;
   setDuration: (duration: TestDuration) => void;
+  togglePunctuation: () => void;
+  toggleNumbers: () => void;
+  setPunctuation: (enabled: boolean) => void;
+  setNumbers: (enabled: boolean) => void;
   reset: (duration?: TestDuration) => void;
 }
 
@@ -169,6 +271,22 @@ export function useTyping(): UseTypingReturn {
     dispatch({ type: 'SET_DURATION', duration });
   }, []);
 
+  const togglePunctuation = useCallback(() => {
+    dispatch({ type: 'TOGGLE_PUNCTUATION' });
+  }, []);
+
+  const toggleNumbers = useCallback(() => {
+    dispatch({ type: 'TOGGLE_NUMBERS' });
+  }, []);
+
+  const setPunctuation = useCallback((enabled: boolean) => {
+    dispatch({ type: 'SET_PUNCTUATION', enabled });
+  }, []);
+
+  const setNumbers = useCallback((enabled: boolean) => {
+    dispatch({ type: 'SET_NUMBERS', enabled });
+  }, []);
+
   const reset = useCallback((duration?: TestDuration) => {
     dispatch({ type: 'RESET', duration });
   }, []);
@@ -188,8 +306,14 @@ export function useTyping(): UseTypingReturn {
     testState: state.testState,
     duration: state.duration,
     metrics,
+    hasPunctuation: state.hasPunctuation,
+    hasNumbers: state.hasNumbers,
     handleKeyDown,
     setDuration,
+    togglePunctuation,
+    toggleNumbers,
+    setPunctuation,
+    setNumbers,
     reset,
   };
 }

@@ -49,8 +49,12 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
     testState,
     duration,
     metrics,
+    hasPunctuation,
+    hasNumbers,
     handleKeyDown,
     setDuration,
+    togglePunctuation,
+    toggleNumbers,
     reset,
   } = useTyping();
 
@@ -163,6 +167,41 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
       {/* Toolbar — Controls & Live Metrics */}
       <div className="typing-area__toolbar" onClick={(e) => e.stopPropagation()}>
         <div className="typing-area__controls">
+          {/* Punctuation and Numbers Toggles */}
+          <div className="typing-area__toggles" role="group" aria-label="Text modifiers">
+            <button
+              type="button"
+              className={`typing-area__toggle-btn ${
+                hasPunctuation ? 'typing-area__toggle-btn--active' : ''
+              }`}
+              onClick={() => {
+                togglePunctuation();
+                focusInput();
+              }}
+              disabled={testState === 'running'}
+              aria-pressed={hasPunctuation}
+              aria-label="Toggle punctuation"
+            >
+              punctuation
+            </button>
+            <button
+              type="button"
+              className={`typing-area__toggle-btn ${
+                hasNumbers ? 'typing-area__toggle-btn--active' : ''
+              }`}
+              onClick={() => {
+                toggleNumbers();
+                focusInput();
+              }}
+              disabled={testState === 'running'}
+              aria-pressed={hasNumbers}
+              aria-label="Toggle numbers"
+            >
+              numbers
+            </button>
+          </div>
+
+          {/* Test Duration Selector */}
           <div className="typing-area__modes" role="group" aria-label="Test duration selector">
             {DURATIONS.map((d) => (
               <button
