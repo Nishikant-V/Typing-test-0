@@ -4,11 +4,13 @@
 
 .typing-area {
   width: 100%;
+  min-height: 250px;
   padding: var(--s-6);
   cursor: text;
   position: relative;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   gap: var(--s-4);
   border: 1px solid transparent;
   background:
@@ -225,20 +227,32 @@
 }
 
 /* ============================================================
-   Passage container — Centered 68ch Measure inside Wider Canvas
+   Passage Viewport — Fixed Height 3-Line Progressive Window
    ============================================================ */
+.typing-area__viewport {
+  height: calc(1.85 * 3 * var(--t-lg)); /* Exactly 3 lines = 111px */
+  max-width: 68ch;
+  width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+  user-select: none;
+  scroll-behavior: smooth;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
+}
+
 .typing-area__passage {
   line-height: 1.85;
-  max-width: 68ch;
-  margin: 0 auto;
   width: 100%;
   overflow-wrap: break-word;
   word-break: break-word;
-  padding: var(--s-4) 0;
+  margin: 0 auto;
+  padding: 0;
   transition: opacity var(--ease-base);
 }
 
-.typing-area--blurred.typing-area--running .typing-area__passage {
+.typing-area--blurred.typing-area--running .typing-area__viewport {
   opacity: 0.35;
 }
 
@@ -320,14 +334,16 @@
 @media (max-width: 768px) {
   .typing-area {
     padding: var(--s-4);
+    min-height: 230px;
+  }
+
+  .typing-area__viewport {
+    height: calc(1.85 * 3 * var(--t-md)); /* ~94px */
+    max-width: 100%;
   }
 
   .char {
     font-size: var(--t-md);
-  }
-
-  .typing-area__passage {
-    max-width: 100%;
   }
 
   .typing-area__metrics {
@@ -341,6 +357,7 @@
 @media (max-width: 480px) {
   .typing-area {
     padding: var(--s-3);
+    min-height: 230px;
   }
 
   .typing-area__toolbar {
@@ -380,6 +397,10 @@
 
   .typing-area__metric-val {
     font-size: var(--t-sm);
+  }
+
+  .typing-area__viewport {
+    height: calc(1.75 * 3 * 1rem); /* ~84px */
   }
 
   .char {

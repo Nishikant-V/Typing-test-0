@@ -59,6 +59,7 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
   } = useTyping();
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
   const [isFocused, setIsFocused] = useState(false);
   const hasSavedRef = useRef<boolean>(false);
   const [pbStatus, setPbStatus] = useState<{ isOverallPb: boolean; isModePb: boolean }>({
@@ -74,6 +75,33 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
     reset();
     focusInput();
   }, [reset, focusInput]);
+
+  /**
+   * Progressive Text Reveal & Smooth Line Scrolling (Typing.com / Monkeytype pattern)
+   * Keeps active typing line centered/visible in the 3-line fixed viewport.
+   */
+  useEffect(() => {
+    if (!viewportRef.current || testState === 'finished') return;
+
+    if (testState === 'idle') {
+      viewportRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    const currentEl = viewportRef.current.querySelector('.char--current') as HTMLElement | null;
+    if (!currentEl) return;
+
+    const currentTop = currentEl.offsetTop;
+    const lineHeight = currentEl.offsetHeight || 37;
+
+    // When the cursor advances past line 1, smoothly scroll up so the current line is in view
+    if (currentTop > lineHeight * 1.1) {
+      const targetScroll = currentTop - lineHeight;
+      viewportRef.current.scrollTo({ top: targetScroll, behavior: 'smooth' });
+    } else {
+      viewportRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [display, testState]);
 
   /**
    * Saves completed test result to localStorage EXACTLY ONCE per test.
@@ -254,12 +282,18 @@ export const TypingArea: React.FC<TypingAreaProps> = ({
         )}
       </div>
 
-      {/* Passage Display */}
+      {/* Passage Viewport — Fixed 3-line progressive reveal window */}
       {testState !== 'finished' && (
-        <div className="typing-area__passage" aria-hidden="true">
-          {display.map((charDisplay, i) => (
-            <Char key={i} display={charDisplay} />
-          ))}
+        <div
+          ref={viewportRef}
+          className="typing-area__viewport"
+          aria-hidden="true"
+        >
+          <div className="typing-area__passage">
+            {display.map((charDisplay, i) => (
+              <Char key={i} display={charDisplay} />
+            ))}
+          </div>
         </div>
       )}
 

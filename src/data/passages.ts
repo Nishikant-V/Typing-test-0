@@ -82,17 +82,28 @@ export function generateWords(count: number, options?: PassageOptions): string {
 
   const resultWords: string[] = [];
   let isStartOfSentence = true;
+  let wordsSinceLastNumber = 0;
 
   for (let i = 0; i < count; i++) {
     let word: string;
 
-    // Check if we should insert a number (~12% chance when numbers mode is active)
-    if (numbers && Math.random() < 0.12) {
+    // In numbers mode: ensure numbers appear visibly and frequently (~25% chance or at least every 4-5 words)
+    const shouldInsertNumber =
+      numbers && (
+        (i === 1 && Math.random() < 0.85) ||
+        wordsSinceLastNumber >= 4 ||
+        Math.random() < 0.22
+      );
+
+    if (shouldInsertNumber) {
       word = NUMBERS_POOL[Math.floor(Math.random() * NUMBERS_POOL.length)];
+      wordsSinceLastNumber = 0;
       isStartOfSentence = false;
     } else {
-      // Pick either a contraction (~15% chance in punctuation mode) or standard word
-      if (punctuation && Math.random() < 0.15) {
+      wordsSinceLastNumber++;
+
+      // Pick either a contraction (~18% chance in punctuation mode) or standard word
+      if (punctuation && Math.random() < 0.18) {
         word = CONTRACTIONS[Math.floor(Math.random() * CONTRACTIONS.length)];
       } else {
         word = WORDS[Math.floor(Math.random() * WORDS.length)];
@@ -105,37 +116,27 @@ export function generateWords(count: number, options?: PassageOptions): string {
       }
     }
 
-    // Apply natural punctuation marks (commas, periods, quotes, colons, question marks)
-    if (punctuation && !numbers && word.match(/^[0-9]+$/)) {
-      // don't punctuate if not applicable
-    } else if (punctuation) {
+    // Apply punctuation marks (commas, periods, question marks, colons, semicolons, exclamation marks)
+    if (punctuation) {
       const rand = Math.random();
-      // Every 5-9 words, terminate or pause a sentence clause
       if (i > 0 && i < count - 1) {
-        if (rand < 0.08) {
-          // Period - ends sentence
+        if (rand < 0.10) {
           word += '.';
           isStartOfSentence = true;
-        } else if (rand < 0.16) {
-          // Comma
+        } else if (rand < 0.20) {
           word += ',';
-        } else if (rand < 0.19) {
-          // Question mark
+        } else if (rand < 0.23) {
           word += '?';
           isStartOfSentence = true;
-        } else if (rand < 0.21) {
-          // Semicolon
+        } else if (rand < 0.26) {
           word += ';';
-        } else if (rand < 0.23) {
-          // Colon
+        } else if (rand < 0.28) {
           word += ':';
-        } else if (rand < 0.25) {
-          // Exclamation mark
+        } else if (rand < 0.31) {
           word += '!';
           isStartOfSentence = true;
         }
       } else if (i === count - 1) {
-        // End passage with a period or exclamation
         word += '.';
       }
     }
